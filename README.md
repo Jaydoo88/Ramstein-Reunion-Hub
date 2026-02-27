@@ -8,7 +8,7 @@ This is a modern, mobile-first reunion website prototype for the Ramstein High S
 - **Routing:** Wouter
 
 ## How to Edit Content
-We've separated the textual content from the code to make it incredibly easy for you or the planning committee to update details as the reunion approaches.
+We've separated the textual content from the code to make it incredibly easy for you or the planning committee to update details as the reunion approaches..
 
 1. Open `client/src/lib/content.ts`
 2. Modify the strings, dates, and event details in the `siteContent` object.
