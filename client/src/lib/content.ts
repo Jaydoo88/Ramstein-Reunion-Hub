@@ -78,9 +78,9 @@ export const siteContent = {
       buttonText: "Upload Photos (Coming Soon)",
     },
     whereAreTheyNow: {
-      title: "Where Are They Now?",
-      description: "Catch up with old friends before the reunion. We'll be featuring profiles of the Class of '88.",
-      buttonText: "Update Your Profile (Coming Soon)",
+      title: "Who Is Attending?",
+      description: "See who has RSVP’d and who’s planning to join the big weekend. Don’t miss out on reconnecting with familiar faces.",
+      buttonText: "VIEW ATTENDEE LIST (COMING SOON)",
     },
   },
 
