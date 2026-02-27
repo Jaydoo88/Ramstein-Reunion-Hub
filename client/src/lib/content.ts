@@ -14,7 +14,7 @@ export const siteContent = {
     dateSnippet: "Summer 2028",
     description: "It's time to gather the Royals once again. Reconnect, reminisce, and celebrate four decades of memories.",
     ctaPrimary: "Join the Mailing List",
-    ctaSecondary: "View Draft Schedule",
+    ctaSecondary: "View Tentative Schedule",
   },
 
   // COUNTDOWN
