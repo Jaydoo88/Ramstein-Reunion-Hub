@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import { Button } from "@/components/ui/button";
-import memoryWallImg from "@/assets/images/memory-wall.jpg";
-import photoGalleryImg from "@/assets/images/photo-gallery.jpg";
-import whoIsAttendingImg from "@/assets/images/who-is-attending.jpg";
+import memoryWallImg from "@assets/memorypic_1772249621886.png";
+import photoGalleryImg from "@assets/gallery_1772249621886.jpg";
+import whoIsAttendingImg from "@assets/attending_1772249621886.jpg";
 
 export function Teasers() {
   const teasers = [
