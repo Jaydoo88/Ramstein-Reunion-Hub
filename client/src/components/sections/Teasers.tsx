@@ -1,25 +1,27 @@
 import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import { Button } from "@/components/ui/button";
-import memoryImg from "@/assets/images/memory_1.jpg";
+import memoryWallImg from "@/assets/images/memory-wall.jpg";
+import photoGalleryImg from "@/assets/images/photo-gallery.jpg";
+import whoIsAttendingImg from "@/assets/images/who-is-attending.jpg";
 
 export function Teasers() {
   const teasers = [
     {
       ...siteContent.teasers.memoryWall,
-      image: memoryImg,
+      image: memoryWallImg,
       bgColor: "bg-rhs-blue",
       textColor: "text-rhs-blue"
     },
     {
       ...siteContent.teasers.photoGallery,
-      image: memoryImg, // Reusing placeholder for now
+      image: photoGalleryImg,
       bgColor: "bg-rhs-red",
       textColor: "text-rhs-red"
     },
     {
       ...siteContent.teasers.whereAreTheyNow,
-      image: memoryImg, // Reusing placeholder for now
+      image: whoIsAttendingImg,
       bgColor: "bg-rhs-navy",
       textColor: "text-rhs-navy"
     }
@@ -46,15 +48,15 @@ export function Teasers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white border-2 border-border flex flex-col h-full group hover:border-rhs-navy transition-colors overflow-hidden varsity-shadow"
+              className="bg-white border-2 border-border flex flex-col h-full group hover:border-rhs-navy transition-colors overflow-hidden varsity-shadow card"
             >
               {/* Image Header */}
-              <div className="h-48 overflow-hidden relative">
-                <div className={`absolute inset-0 opacity-40 mix-blend-multiply z-10 ${teaser.bgColor}`}></div>
+              <div className="h-48 overflow-hidden relative card-image">
+                <div className="absolute inset-0 bg-[#00204E]/15 z-10 pointer-events-none"></div>
                 <img 
                   src={teaser.image} 
                   alt={teaser.title} 
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-105" 
+                  className="block w-full h-full object-cover transition-transform duration-[350ms] ease-in-out group-hover:scale-105" 
                 />
               </div>
 

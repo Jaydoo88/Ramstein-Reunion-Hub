@@ -1,0 +1,84 @@
+Replace the 3 Feature Card Images with Stock Photos (No Permissions Needed)
+
+We want to replace the three images in the Reconnect & Reminisce section (Memory Wall / Photo Gallery / Who Is Attending) with stock photos so we don’t need permissions.
+
+Requirements (important)
+
+Use licensed stock photos that allow commercial use (Unsplash / Pexels / Shutterstock / Adobe Stock, etc.).
+
+No cheesy corporate photos. Must feel candid and authentic.
+
+Adults should look ~40–50+ (Class of ’88 age range).
+
+Keep consistent crop size/aspect ratio across all three images.
+
+Add a subtle navy overlay so all three match the site branding.
+
+What images we want (search terms)
+1) Memory Wall (close interaction / emotional)
+
+Use a candid close-up of 2–3 friends reconnecting (hugging, laughing, shoulder touch).
+Search terms:
+
+“middle aged friends hugging candid”
+
+“friends reconnecting emotional moment”
+
+“class reunion hug candid”
+
+2) Photo Gallery (fun / energy)
+
+Use a reunion party vibe: small group laughing/toasting, warm lighting.
+Search terms:
+
+“class reunion party adults candid”
+
+“middle aged friends toasting drinks”
+
+“friends laughing at party warm lighting”
+
+3) Who Is Attending? (momentum / anticipation)
+
+Use a welcoming/arrival moment: friends greeting each other, group walking in together.
+Search terms:
+
+“friends greeting each other at event”
+
+“group of adults arriving at party”
+
+“reunion arrival candid adults”
+
+Implementation Notes
+
+Replace the existing <img> sources for those 3 cards with the new stock images.
+
+Keep all images the same size and crop (square is fine).
+
+Add a subtle overlay on the image container:
+
+.card-image {
+  position: relative;
+}
+.card-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 32, 78, 0.15); /* navy overlay */
+}
+.card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+Add a small hover zoom effect:
+
+.card-image img {
+  transition: transform 0.35s ease;
+}
+.card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+Commit and redeploy.
