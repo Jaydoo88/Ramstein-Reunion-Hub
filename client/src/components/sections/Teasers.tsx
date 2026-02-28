@@ -51,7 +51,7 @@ export function Teasers() {
               className="bg-white border-2 border-border flex flex-col h-full group hover:border-rhs-navy transition-colors overflow-hidden varsity-shadow card"
             >
               {/* Image Header */}
-              <div className="aspect-square overflow-hidden relative card-image">
+              <div className="h-56 w-full overflow-hidden relative card-image">
                 <div className="absolute inset-0 bg-[#00204E]/15 z-10 pointer-events-none"></div>
                 <img 
                   src={teaser.image} 
