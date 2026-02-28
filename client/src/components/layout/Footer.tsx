@@ -45,11 +45,14 @@ export function Footer() {
             <h4 className="font-display text-rhs-gold text-lg mb-4 tracking-wider uppercase">Get in Touch</h4>
             <ul className="space-y-2 font-sans text-sm">
               <li>
-                <a href={`mailto:${siteContent.committee.contactEmail}`} className="text-gray-300 hover:text-white transition-colors flex items-center gap-2">
-                  <span>✉</span> {siteContent.committee.contactEmail}
+                <div className="text-gray-300 flex items-center gap-2 mb-1">
+                  <span>✉</span> Contact Person:
+                </div>
+                <a href={`mailto:${siteContent.committee.contactEmail}`} className="text-white font-bold hover:text-rhs-red transition-colors ml-6">
+                  {siteContent.committee.contactPerson}
                 </a>
               </li>
-              <li>
+              <li className="mt-4">
                 <a href={siteContent.committee.facebookGroup} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors flex items-center gap-2">
                   <span>f</span> Join our Facebook Group
                 </a>

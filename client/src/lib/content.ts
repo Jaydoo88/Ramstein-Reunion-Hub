@@ -89,11 +89,12 @@ export const siteContent = {
     title: "Planning Committee",
     description: "We need volunteers! If you're interested in helping organize the 40-year reunion, please reach out.",
     members: [
-      { name: "Jane (Doe) Smith", role: "Chairperson", email: "jane@example.com" },
+      { name: "Jay Schuh", role: "Chairperson", email: "hisemail@domain.com", photo: true },
       { name: "John Johnson", role: "Treasurer", email: "john@example.com" },
       { name: "Mary (Williams) Davis", role: "Communications", email: "mary@example.com" },
     ],
     contactEmail: "reunion@rhs1988.com",
+    contactPerson: "Jay Schuh",
     facebookGroup: "https://facebook.com/groups/rhs1988", // Replace with actual link
   },
 

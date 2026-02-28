@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
+import jaySchuhPhoto from "@assets/jayschuh_1772250109274.jpg";
 
 export function Committee() {
   return (
@@ -38,14 +39,25 @@ export function Committee() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-muted border border-border p-6 text-center group hover:bg-rhs-blue/5 transition-colors"
             >
-              <div className="w-16 h-16 bg-white border-2 border-rhs-navy text-rhs-navy rounded-full mx-auto mb-4 flex items-center justify-center font-display text-2xl shadow-sm group-hover:scale-110 transition-transform">
-                {member.name.charAt(0)}
-              </div>
+              {member.photo ? (
+                <div className="w-20 h-20 mx-auto mb-4 overflow-hidden rounded-full border-4 border-rhs-navy shadow-sm group-hover:scale-110 transition-transform">
+                  <img src={jaySchuhPhoto} alt={member.name} className="w-full h-full object-cover" />
+                </div>
+              ) : (
+                <div className="w-20 h-20 bg-white border-4 border-rhs-navy text-rhs-navy rounded-full mx-auto mb-4 flex items-center justify-center font-display text-3xl shadow-sm group-hover:scale-110 transition-transform">
+                  {member.name.charAt(0)}
+                </div>
+              )}
+              
               <h3 className="font-serif font-bold text-xl text-rhs-navy mb-1">{member.name}</h3>
               <p className="font-sans text-rhs-blue font-semibold text-sm uppercase tracking-wider mb-3">{member.role}</p>
-              <a href={`mailto:${member.email}`} className="text-gray-500 hover:text-rhs-red transition-colors text-sm">
-                {member.email}
-              </a>
+              
+              <div className="flex flex-col text-sm">
+                <span className="text-gray-500 mb-1">Contact Person</span>
+                <a href={`mailto:${member.email}`} className="text-rhs-navy font-bold hover:text-rhs-red transition-colors">
+                  {member.name}
+                </a>
+              </div>
             </motion.div>
           ))}
         </div>
