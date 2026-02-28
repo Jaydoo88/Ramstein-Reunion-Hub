@@ -1,4 +1,5 @@
 import { siteContent } from "@/lib/content";
+import rhsLogo from "@assets/rhslogo_1772235631217.jpeg";
 
 export function Footer() {
   return (
@@ -13,9 +14,11 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-rhs-blue flex items-center justify-center border-2 border-white">
-                <span className="font-display text-white text-xl">RHS</span>
-              </div>
+              <img 
+                src={rhsLogo} 
+                alt="Ramstein High School Logo" 
+                className="w-12 h-12 rounded-full object-cover border-2 border-white bg-white"
+              />
               <div>
                 <span className="block font-display text-xl leading-none">{siteContent.hero.schoolName}</span>
                 <span className="block font-serif text-sm font-bold text-gray-300">{siteContent.hero.className}</span>

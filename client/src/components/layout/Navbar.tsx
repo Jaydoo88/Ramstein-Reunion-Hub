@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import rhsLogo from "@assets/rhslogo_1772235631217.jpeg";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,9 +37,11 @@ export function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo / Brand */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center varsity-shadow border-2 border-foreground transition-transform group-hover:scale-105">
-              <span className="font-display text-white text-xl">RHS</span>
-            </div>
+            <img 
+              src={rhsLogo} 
+              alt="Ramstein High School Logo" 
+              className="w-12 h-12 rounded-full object-cover varsity-shadow border-2 border-foreground transition-transform group-hover:scale-105 bg-white"
+            />
             <div className="hidden sm:block">
               <span className="block font-display text-primary text-xl leading-none">Ramstein</span>
               <span className="block font-serif text-sm font-bold text-foreground">Class of '88</span>
