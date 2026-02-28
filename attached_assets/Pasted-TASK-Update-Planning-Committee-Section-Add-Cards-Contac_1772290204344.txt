@@ -1,0 +1,105 @@
+TASK: Update “Planning Committee” Section (Add Cards + Contact Link + Photos)
+1) Keep the current card design exactly
+
+The current “Planning Committee” cards (layout, fonts, small circular avatar, border, spacing) are perfect.
+
+✅ Do NOT change the design.
+✅ Only add cards + swap avatar images + change the contact line behavior.
+
+2) Add 3 more cards (for a total of 6)
+
+Currently there are 3 cards:
+
+Jay Schuh – Chairperson (with photo)
+
+John Johnson – Treasurer (letter avatar)
+
+Mary (Williams) Davis – Communications (letter avatar)
+
+Please add 3 additional cards using the exact same styling.
+
+New Card #1 (Jason)
+
+Name: Jason Dousharm
+
+Role/Title: WEB DESIGNER
+
+Avatar Image: use the uploaded photo file (see #4 below)
+
+New Card #2 (placeholder until I send details)
+
+Name: TBD
+
+Role/Title: PLANNING SUPPORT
+
+Avatar: keep the existing letter-circle style (or placeholder)
+
+New Card #3 (placeholder until I send details)
+
+Name: TBD
+
+Role/Title: PLANNING SUPPORT
+
+Avatar: keep the existing letter-circle style (or placeholder)
+
+✅ The grid should remain responsive (wrap to new row automatically).
+
+3) Remove the duplicate name under Contact Person
+
+Right now each card shows:
+
+“Contact Person”
+
+then the person’s name again underneath
+
+Please remove the second name line completely.
+
+4) Replace “Contact Person” with ONE clickable line: “Contact Jay”
+
+Change the label “Contact Person” to:
+
+Contact Jay
+
+This should appear on all six cards as a single line link (no second line underneath).
+
+✅ “Contact Jay” should be clickable
+✅ Email should be embedded (mailto), but do NOT show the raw email address anywhere
+
+Use this format:
+
+<a href="mailto:JAY_EMAIL_HERE?subject=Ramstein%20Reunion%20Planning%20Committee">Contact Jay</a>
+
+(You can put a placeholder email for now if I haven’t provided it yet.)
+
+5) Avatar images: keep the small circle avatar style, just swap images
+
+Do NOT change avatar size/shape/border.
+
+Just swap the avatar src for:
+
+Jay Schuh card avatar: jayschuh.jpg
+Jason Dousharm card avatar: use my uploaded photo file: 1665088037422.jpg
+
+If needed, ensure the avatar image uses:
+
+border-radius: 50%
+
+object-fit: cover
+
+fixed width/height (unchanged)
+
+Example only if required:
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+6) File placement (preferred)
+
+If this is React/Vite:
+
+put photos in /public/
+
+reference them as /jayschuh.jpg and /1665088037422.jpg

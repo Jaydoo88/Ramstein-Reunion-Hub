@@ -1,8 +1,15 @@
 import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import jaySchuhPhoto from "@assets/jayschuh_1772250109274.jpg";
+import jasonPhoto from "@assets/1665088037422_1772290199657.jpg";
 
 export function Committee() {
+  const getPhoto = (photoName: string | undefined) => {
+    if (photoName === "jay") return jaySchuhPhoto;
+    if (photoName === "jason") return jasonPhoto;
+    return null;
+  };
+
   return (
     <section className="py-24 bg-white border-y-4 border-rhs-gold relative">
       {/* Decorative texture overlay */}
@@ -39,9 +46,9 @@ export function Committee() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-muted border border-border p-6 text-center group hover:bg-rhs-blue/5 transition-colors"
             >
-              {member.photo ? (
+              {member.photo && member.photoName ? (
                 <div className="w-20 h-20 mx-auto mb-4 overflow-hidden rounded-full border-4 border-rhs-navy shadow-sm group-hover:scale-110 transition-transform">
-                  <img src={jaySchuhPhoto} alt={member.name} className="w-full h-full object-cover" />
+                  <img src={getPhoto(member.photoName) || ""} alt={member.name} className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="w-20 h-20 bg-white border-4 border-rhs-navy text-rhs-navy rounded-full mx-auto mb-4 flex items-center justify-center font-display text-3xl shadow-sm group-hover:scale-110 transition-transform">
@@ -52,10 +59,12 @@ export function Committee() {
               <h3 className="font-serif font-bold text-xl text-rhs-navy mb-1">{member.name}</h3>
               <p className="font-sans text-rhs-blue font-semibold text-sm uppercase tracking-wider mb-3">{member.role}</p>
               
-              <div className="flex flex-col text-sm">
-                <span className="text-gray-500 mb-1">Contact Person</span>
-                <a href={`mailto:${member.email}`} className="text-rhs-navy font-bold hover:text-rhs-red transition-colors">
-                  {member.name}
+              <div className="flex justify-center text-sm mt-auto pt-2">
+                <a 
+                  href={`mailto:${siteContent.committee.members.find(m => m.name === "Jay Schuh")?.email || "hisemail@domain.com"}?subject=Ramstein%20Reunion%20Planning%20Committee`} 
+                  className="text-rhs-navy font-bold hover:text-rhs-red transition-colors inline-flex items-center gap-1"
+                >
+                  Contact Jay
                 </a>
               </div>
             </motion.div>
