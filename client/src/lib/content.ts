@@ -90,7 +90,7 @@ export const siteContent = {
     description: "We need volunteers! If you're interested in helping organize the 40-year reunion, please reach out.",
     members: [
       { name: "Jay Schuh", role: "Chairperson", email: "hisemail@domain.com", photo: true, photoName: "jay" },
-      { name: "Jason Dousharm", role: "WEB DESIGNER", email: "jason@example.com", photo: true, photoName: "jason" },
+      { name: "Jason Dousharm", role: "WEB DESIGNER", email: "jasondousharm@gmail.com", photo: true, photoName: "jason" },
       { name: "TBD", role: "PLANNING SUPPORT", email: "tbd@example.com", photo: false },
       { name: "John Johnson", role: "Treasurer", email: "john@example.com", photo: false },
       { name: "Mary (Williams) Davis", role: "Communications", email: "mary@example.com", photo: false },

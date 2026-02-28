@@ -59,14 +59,16 @@ export function Committee() {
               <h3 className="font-serif font-bold text-xl text-rhs-navy mb-1">{member.name}</h3>
               <p className="font-sans text-rhs-blue font-semibold text-sm uppercase tracking-wider mb-3">{member.role}</p>
               
-              <div className="flex justify-center text-sm mt-auto pt-2">
-                <a 
-                  href={`mailto:${siteContent.committee.members.find(m => m.name === "Jay Schuh")?.email || "hisemail@domain.com"}?subject=Ramstein%20Reunion%20Planning%20Committee`} 
-                  className="text-rhs-navy font-bold hover:text-rhs-red transition-colors inline-flex items-center gap-1"
-                >
-                  Contact Jay
-                </a>
-              </div>
+              {member.name !== "TBD" && member.email && (
+                <div className="flex justify-center text-sm mt-auto pt-2">
+                  <a 
+                    href={`mailto:${member.email}?subject=Ramstein%20Reunion%20Planning%20Committee`} 
+                    className="text-rhs-navy font-bold hover:text-rhs-red transition-colors inline-flex items-center gap-1"
+                  >
+                    Contact {member.name.split(' ')[0]}
+                  </a>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
