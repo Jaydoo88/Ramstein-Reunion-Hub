@@ -43,13 +43,20 @@ export function Hero() {
             </h1>
 
             {/* Date/Location Strip */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 font-serif text-lg md:text-xl text-rhs-gold">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6 font-serif text-lg md:text-xl text-rhs-gold">
               <div className="flex items-center gap-2">
                 <span className="w-8 h-[2px] bg-rhs-gold hidden md:block"></span>
                 {siteContent.hero.dateSnippet}
                 <span className="w-8 h-[2px] bg-rhs-gold hidden md:block"></span>
               </div>
             </div>
+
+            {/* Pill Badge */}
+            {siteContent.hero.pillBadge && (
+              <div className="inline-block mb-8 px-6 py-2 bg-rhs-blue/90 border border-white/20 text-white rounded-full text-sm font-bold tracking-wider uppercase shadow-lg backdrop-blur-md">
+                {siteContent.hero.pillBadge}
+              </div>
+            )}
 
             {/* Description */}
             <p className="font-sans text-lg md:text-xl text-gray-200 mb-12 max-w-2xl mx-auto leading-relaxed">

@@ -13,6 +13,7 @@ export const siteContent = {
     eventTitle: "40-Year Reunion",
     dateSnippet: "Summer 2028",
     description: "It's time to gather the Royals once again. Reconnect, reminisce, and celebrate four decades of memories.",
+    pillBadge: "All classes welcome — this is a whole-Ramstein reunion vibe.",
     ctaPrimary: "Join the Mailing List",
     ctaSecondary: "View Tentative Schedule",
   },
@@ -105,6 +106,10 @@ export const siteContent = {
   faq: {
     title: "Frequently Asked Questions",
     questions: [
+      {
+        q: "Is this only for the Class of 1988?",
+        a: "No. We’re celebrating the Class of 1988’s 40-year reunion, but all Ramstein High School alumni classes are invited. If you went to Ramstein — you’re welcome.",
+      },
       {
         q: "When exactly is the reunion?",
         a: "We are aiming for Summer 2028. The exact dates will be finalized based on venue availability and committee decisions.",
