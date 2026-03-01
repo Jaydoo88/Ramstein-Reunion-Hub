@@ -1,0 +1,62 @@
+Fix Social Share Preview (Remove Replit branding + Use “Ramstein 40 Year Reunion” Image)
+Goal
+
+When someone shares https://www.royals88reunion.com/, the preview should show:
+
+Title: Ramstein High School – 40 Year Reunion
+
+Description: short reunion tagline
+
+Image: a custom share image (NOT Replit)
+
+1) Create/Upload a Share Image
+
+Create an image file (recommended 1200×630, JPG or PNG) named:
+
+/public/og-image.jpg
+
+Design:
+
+Background: school photo or your hero background
+
+Overlay text: “Ramstein 40 Year Reunion”
+
+Optional small RHS logo in corner
+
+2) Add Open Graph + Twitter Meta Tags
+
+In the main page <head> (likely index.html or your base layout), add/update:
+
+<!-- Primary Meta Tags -->
+<title>Ramstein High School – 40 Year Reunion</title>
+<meta name="description" content="Reconnect, reminisce, and celebrate four decades of memories. Class of ’88 reunion hub.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.royals88reunion.com/">
+<meta property="og:title" content="Ramstein High School – 40 Year Reunion">
+<meta property="og:description" content="Reconnect, reminisce, and celebrate four decades of memories. Class of ’88 reunion hub.">
+<meta property="og:image" content="https://www.royals88reunion.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ramstein High School – 40 Year Reunion">
+<meta name="twitter:description" content="Reconnect, reminisce, and celebrate four decades of memories. Class of ’88 reunion hub.">
+<meta name="twitter:image" content="https://www.royals88reunion.com/og-image.jpg">
+3) Deploy + Force Refresh Social Cache
+
+After deploying to Vercel, the preview may stay cached.
+
+Use Facebook Sharing Debugger to “Scrape Again”
+
+If you change the image again later, bump it like:
+og-image.jpg?v=2
+
+Example:
+
+<meta property="og:image" content="https://www.royals88reunion.com/og-image.jpg?v=2">
+4) Confirm that no Replit OG tags remain
+
+Remove/override any old tags referencing Replit (like replit.com images).
