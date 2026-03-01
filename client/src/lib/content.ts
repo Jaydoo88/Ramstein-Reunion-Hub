@@ -71,7 +71,7 @@ export const siteContent = {
     memoryWall: {
       title: "Memory Wall",
       description: "Share your favorite moments, stories, and tributes to classmates we've lost.",
-      buttonText: "VIEW MEMORY WALL",
+      buttonText: "SUBMIT A MEMORY",
     },
     photoGallery: {
       title: "Photo Gallery",

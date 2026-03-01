@@ -72,7 +72,7 @@ export function Teasers() {
                 </p>
                 
                 {index === 0 ? (
-                  <Link href="/memory-wall" className="w-full mt-auto">
+                  <Link href="/memory-wall" className="w-full mt-auto block">
                     <Button 
                       variant="outline" 
                       className={`w-full border-2 font-bold uppercase tracking-wider rounded-none
