@@ -81,6 +81,9 @@ export default function MemoryWall() {
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
 
   useEffect(() => {
+    // Ensure we start at the top of the page
+    window.scrollTo(0, 0);
+
     async function fetchMemories() {
       setIsLoading(true);
       try {
