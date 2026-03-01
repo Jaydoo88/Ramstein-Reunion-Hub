@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import { Button } from "@/components/ui/button";
+import { MailingListModal } from "@/components/ui/MailingListModal";
 import heroBg from "@assets/image_1771987222394.png";
 
 export function Hero() {
@@ -65,9 +66,11 @@ export function Hero() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <Button size="lg" className="w-full sm:w-auto bg-rhs-red hover:bg-rhs-red/90 text-white font-bold uppercase tracking-wider text-lg px-8 py-6 rounded-none varsity-shadow border-2 border-white transition-transform hover:-translate-y-1">
-                {siteContent.hero.ctaPrimary}
-              </Button>
+              <MailingListModal>
+                <Button size="lg" className="w-full sm:w-auto bg-rhs-red hover:bg-rhs-red/90 text-white font-bold uppercase tracking-wider text-lg px-8 py-6 rounded-none varsity-shadow border-2 border-white transition-transform hover:-translate-y-1">
+                  {siteContent.hero.ctaPrimary}
+                </Button>
+              </MailingListModal>
               <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold uppercase tracking-wider text-lg px-8 py-6 rounded-none transition-transform hover:-translate-y-1">
                 {siteContent.hero.ctaSecondary}
               </Button>
