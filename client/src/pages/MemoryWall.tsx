@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Search, SlidersHorizontal, UserRound } from "lucide-react";
+import { Search, SlidersHorizontal, UserRound, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/lib/supabaseClient";
 
 // --- Types ---
 type MemoryStatus = "APPROVED" | "PENDING";
@@ -70,12 +71,50 @@ const initialMemories: Memory[] = [
 ];
 
 export default function MemoryWall() {
-  const [memories, setMemories] = useState<Memory[]>(initialMemories);
+  const [memories, setMemories] = useState<Memory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [yearFilter, setYearFilter] = useState("All Years");
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
+
+  useEffect(() => {
+    async function fetchMemories() {
+      setIsLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("memories")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching memories:", error);
+          return;
+        }
+
+        if (data) {
+          const formattedMemories: Memory[] = data.map((row: any) => ({
+            id: row.id.toString(),
+            author: row.submitter_name,
+            gradYear: row.grad_year,
+            title: row.title,
+            content: row.memory_text,
+            inMemoryOf: row.honoree_name || undefined,
+            date: row.created_at,
+            status: row.status as MemoryStatus,
+          }));
+          setMemories(formattedMemories);
+        }
+      } catch (err) {
+        console.error("Failed to load memories", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    fetchMemories();
+  }, []);
 
   // --- Filtering & Sorting ---
   const filteredMemories = useMemo(() => {
@@ -171,7 +210,11 @@ export default function MemoryWall() {
         </div>
 
         {/* Memories Grid */}
-        {filteredMemories.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-rhs-blue" />
+          </div>
+        ) : filteredMemories.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-lg border-2 border-dashed border-gray-200">
             <p className="text-gray-500 text-lg">No memories found matching your search.</p>
             <Button 
@@ -287,39 +330,66 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
     confirmed: false
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Create new pending memory
-    const newMemory: Memory = {
-      id: Date.now().toString(),
-      author: formData.author,
-      gradYear: formData.gradYear,
-      title: formData.title,
-      content: formData.content,
-      inMemoryOf: formData.inMemoryOf || undefined,
-      date: new Date().toISOString(),
-      status: "PENDING" // ALWAYS PENDING!
-    };
+    try {
+      const { error } = await supabase.from("memories").insert([{
+        status: "PENDING",
+        submitter_name: formData.author,
+        grad_year: formData.gradYear,
+        honoree_name: formData.inMemoryOf || null,
+        title: formData.title,
+        memory_text: formData.content,
+        photo_url: null,
+        submitter_email: formData.email || null
+      }]);
 
-    onAddMemory(newMemory);
-    
-    setOpen(false);
-    setFormData({
-      author: "",
-      gradYear: "1988",
-      title: "",
-      content: "",
-      inMemoryOf: "",
-      email: "",
-      confirmed: false
-    });
+      if (error) throw error;
 
-    toast({
-      title: "Memory Submitted!",
-      description: "Thank you for sharing. We'll review it before it appears on the wall.",
-      className: "bg-green-50 border-green-200 text-green-800",
-    });
+      // Create new pending memory
+      const newMemory: Memory = {
+        id: Date.now().toString(),
+        author: formData.author,
+        gradYear: formData.gradYear,
+        title: formData.title,
+        content: formData.content,
+        inMemoryOf: formData.inMemoryOf || undefined,
+        date: new Date().toISOString(),
+        status: "PENDING" // ALWAYS PENDING!
+      };
+
+      onAddMemory(newMemory);
+      
+      setOpen(false);
+      setFormData({
+        author: "",
+        gradYear: "1988",
+        title: "",
+        content: "",
+        inMemoryOf: "",
+        email: "",
+        confirmed: false
+      });
+
+      toast({
+        title: "Submitted!",
+        description: "We'll review it before it appears on the wall.",
+        className: "bg-green-50 border-green-200 text-green-800",
+      });
+    } catch (error) {
+      console.error("Error submitting memory:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit memory. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -448,9 +518,9 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
             <Button
               type="submit"
               className="flex-1 bg-rhs-blue hover:bg-rhs-navy text-white rounded-none font-bold uppercase tracking-wider"
-              disabled={formData.content.length < 50 || !formData.confirmed}
+              disabled={formData.content.length < 50 || !formData.confirmed || isSubmitting}
             >
-              Submit Memory
+              {isSubmitting ? "Submitting..." : "Submit Memory"}
             </Button>
           </div>
         </form>
