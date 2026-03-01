@@ -374,15 +374,28 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
           .upload(filePath, photoFile);
 
         if (uploadError) {
-          console.error("Storage upload error details:", uploadError);
-          throw new Error(`Photo upload failed: ${uploadError.message}. Details: ${uploadError.details || 'N/A'}`);
-        }
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('memory-photos')
-          .getPublicUrl(filePath);
+          // Log complete error details including statusCode and the URL being used
+          console.error("Storage upload error details:", {
+             error: uploadError,
+             message: uploadError.message,
+             statusCode: (uploadError as any).statusCode || 'N/A',
+             url: import.meta.env.VITE_SUPABASE_URL || 'https://plywgbbehmrpsnurhuos.supabase.co'
+          });
           
-        uploadedPhotoUrl = publicUrl;
+          console.warn(`Photo upload failed: ${uploadError.message}. Proceeding without photo.`);
+          // We don't throw here, we just leave uploadedPhotoUrl as null
+          toast({
+            title: "Photo Upload Failed",
+            description: "Your memory will be submitted without the photo.",
+            variant: "default",
+          });
+        } else {
+          const { data: { publicUrl } } = supabase.storage
+            .from('memory-photos')
+            .getPublicUrl(filePath);
+            
+          uploadedPhotoUrl = publicUrl;
+        }
       }
 
       const { error: insertError } = await supabase.from("memories").insert([{
