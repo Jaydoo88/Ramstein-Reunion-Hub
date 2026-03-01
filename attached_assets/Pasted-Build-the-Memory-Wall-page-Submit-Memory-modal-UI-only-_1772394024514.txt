@@ -1,0 +1,129 @@
+Build the “Memory Wall” page + Submit Memory modal (UI only, mock data)
+Goal
+
+Create a new page: /memory-wall that looks polished and matches the site theme. This is UI-only for now (no backend). Use mock data in code.
+
+1) Page Structure: /memory-wall
+Header / Intro block
+
+Title: Memory Wall
+
+Subtext:
+Share your favorite moments, stories, and tributes to classmates we’ve lost.
+
+A primary button: Submit a Memory
+
+Optional small note under button:
+Submissions are reviewed before posting.
+
+Filter bar (UI only)
+
+Add a filter row above the cards:
+
+Graduation Year dropdown (All Years + 1975–2020, default All Years)
+
+Search input (placeholder: “Search names or keywords…”)
+
+Sort dropdown:
+
+Newest first (default)
+
+Oldest first
+
+Filters should work on the mock data in memory (front-end filtering only).
+
+2) Memory Cards Grid (Mock Data)
+
+Display memory posts as cards in a responsive grid:
+
+Card shows:
+
+Memory title
+
+Submitter name + grad year
+
+Optional “In memory of: [Name]” line if provided
+
+Short excerpt (first ~180 chars) with a Read more link/button
+
+Date
+
+Read more behavior
+
+Clicking “Read more” opens a modal with the full memory text.
+
+3) “Submit a Memory” Modal (UI only)
+
+Button opens a modal with form:
+
+Required:
+
+Your Name
+
+Graduation Year (1975–2020, default 1988)
+
+Memory Title
+
+Memory Text (textarea, min 50 chars)
+
+Optional:
+
+In memory of (classmate name)
+
+Your Email (not displayed)
+
+Required checkbox:
+
+I confirm this submission is respectful and appropriate.
+
+Buttons:
+
+Primary: Submit Memory
+
+Secondary: Cancel
+
+Submission behavior (temporary):
+
+On submit, validate required fields
+
+If valid, add the new memory to the top of the mock list (in state)
+
+Close modal
+
+Show a toast or message:
+“Submitted! We’ll review it before it appears on the wall.”
+
+Do NOT display newly submitted items publicly yet — set status “PENDING” in the mock data and hide them from the public list. (So it feels moderated.)
+
+4) Moderation logic (mock only)
+
+In the mock data, each memory should have:
+
+status: "APPROVED" | "PENDING"
+Only show APPROVED on the page.
+
+When someone submits a memory via the modal, it should be created as PENDING and not visible.
+
+5) Styling / UX requirements
+
+Match existing site typography and buttons
+
+Modal must close via:
+
+X button
+
+click outside
+
+ESC key
+
+Mobile friendly
+
+Keep it clean and respectful (no chaotic social feed look)
+
+6) What I need back from you
+
+The file(s) you created/edited
+
+The route path you used for the page
+
+Confirm filtering + read-more modal works with mock data

@@ -70,8 +70,8 @@ export const siteContent = {
   teasers: {
     memoryWall: {
       title: "Memory Wall",
-      description: "Share your favorite moments, stories, and tributes to classmates we've lost. Coming soon.",
-      buttonText: "Submit a Memory (Coming Soon)",
+      description: "Share your favorite moments, stories, and tributes to classmates we've lost.",
+      buttonText: "VIEW MEMORY WALL",
     },
     photoGallery: {
       title: "Photo Gallery",

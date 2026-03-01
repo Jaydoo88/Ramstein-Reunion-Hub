@@ -5,6 +5,8 @@ import memoryWallImg from "@assets/memorypic_1772249621886.png";
 import photoGalleryImg from "@assets/gallery_1772249621886.jpg";
 import whoIsAttendingImg from "@assets/attending_1772249621886.jpg";
 
+import { Link } from "wouter";
+
 export function Teasers() {
   const teasers = [
     {
@@ -69,16 +71,30 @@ export function Teasers() {
                   {teaser.description}
                 </p>
                 
-                <Button 
-                  variant="outline" 
-                  className={`w-full border-2 font-bold uppercase tracking-wider rounded-none
-                    ${teaser.textColor === 'text-rhs-blue' ? 'border-rhs-blue text-rhs-blue hover:bg-rhs-blue hover:text-white' : 
-                      teaser.textColor === 'text-rhs-red' ? 'border-rhs-red text-rhs-red hover:bg-rhs-red hover:text-white' : 
-                      'border-rhs-navy text-rhs-navy hover:bg-rhs-navy hover:text-white'}`}
-                  disabled
-                >
-                  {teaser.buttonText}
-                </Button>
+                {index === 0 ? (
+                  <Link href="/memory-wall" className="w-full mt-auto">
+                    <Button 
+                      variant="outline" 
+                      className={`w-full border-2 font-bold uppercase tracking-wider rounded-none
+                        ${teaser.textColor === 'text-rhs-blue' ? 'border-rhs-blue text-rhs-blue hover:bg-rhs-blue hover:text-white' : 
+                          teaser.textColor === 'text-rhs-red' ? 'border-rhs-red text-rhs-red hover:bg-rhs-red hover:text-white' : 
+                          'border-rhs-navy text-rhs-navy hover:bg-rhs-navy hover:text-white'}`}
+                    >
+                      {teaser.buttonText}
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    className={`w-full mt-auto border-2 font-bold uppercase tracking-wider rounded-none
+                      ${teaser.textColor === 'text-rhs-blue' ? 'border-rhs-blue text-rhs-blue hover:bg-rhs-blue hover:text-white' : 
+                        teaser.textColor === 'text-rhs-red' ? 'border-rhs-red text-rhs-red hover:bg-rhs-red hover:text-white' : 
+                        'border-rhs-navy text-rhs-navy hover:bg-rhs-navy hover:text-white'}`}
+                    disabled
+                  >
+                    {teaser.buttonText}
+                  </Button>
+                )}
               </div>
             </motion.div>
           ))}
