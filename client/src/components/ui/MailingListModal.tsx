@@ -11,7 +11,7 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
     gradYear: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success" | "duplicate" | "error">("idle");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
     setStatus("idle");
 
     try {
-      await fetch("https://script.google.com/macros/s/AKfycbx8WqR921m0XgLroHkFhsHusAihlwsInLQ1gFoMhqVUGNQpvqm3d593CmJgL-A-SZNt8g/exec", {
+      const response = await fetch("https://script.google.com/macros/s/AKfycbx8WqR921m0XgLroHkFhsHusAihlwsInLQ1gFoMhqVUGNQpvqm3d593CmJgL-A-SZNt8g/exec", {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
@@ -31,7 +31,14 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
         })
       });
 
-      setStatus("success");
+      const data = await response.json();
+
+      if (data.duplicate) {
+        setStatus("duplicate");
+      } else {
+        setStatus("success");
+      }
+      
       setFormData({ firstName: "", lastName: "", email: "", gradYear: "" });
       
       // Optionally close modal after 2 seconds
@@ -66,10 +73,14 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
           </DialogDescription>
         </DialogHeader>
         
-        {status === "success" ? (
+        {status === "success" || status === "duplicate" ? (
           <div className="py-8 text-center animate-in fade-in zoom-in duration-300">
-            <h3 className="text-xl font-bold text-green-400 mb-2">You’re on the list!</h3>
-            <p className="text-gray-300">Dallas updates coming soon.</p>
+            <h3 className="text-xl font-bold text-green-400 mb-2">
+              {status === "duplicate" ? "You’re already on the list!" : "You’re on the list!"}
+            </h3>
+            <p className="text-gray-300">
+              {status === "duplicate" ? "You’re all set." : "Dallas updates coming soon."}
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 mt-4 animate-in fade-in duration-300">
