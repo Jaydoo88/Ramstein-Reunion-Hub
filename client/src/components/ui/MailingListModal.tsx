@@ -8,7 +8,7 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
     firstName: "",
     lastName: "",
     email: "",
-    gradYear: "",
+    gradYear: "1988",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "duplicate" | "error">("idle");
@@ -39,7 +39,7 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
         setStatus("success");
       }
       
-      setFormData({ firstName: "", lastName: "", email: "", gradYear: "" });
+      setFormData({ firstName: "", lastName: "", email: "", gradYear: "1988" });
       
       // Optionally close modal after 2 seconds
       setTimeout(() => {
@@ -128,19 +128,17 @@ export function MailingListModal({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="gradYear" className="text-sm font-medium text-gray-200">Graduation Year (Optional)</label>
+              <label htmlFor="gradYear" className="text-sm font-medium text-gray-200">Graduation Year *</label>
               <select
                 id="gradYear"
+                required
                 className="w-full px-3 py-2 bg-rhs-navy border border-white/20 rounded-md focus:outline-none focus:ring-2 focus:ring-rhs-gold text-white [&>option]:bg-rhs-navy"
                 value={formData.gradYear}
                 onChange={(e) => setFormData({ ...formData, gradYear: e.target.value })}
                 data-testid="input-gradyear"
               >
-                <option value="">Select Year</option>
-                <option value="1988">1988</option>
-                <option value="1987">1987</option>
-                <option value="1989">1989</option>
-                {Array.from({ length: 15 }, (_, i) => 1975 + i).filter(y => y !== 1988 && y !== 1987 && y !== 1989).map(year => (
+                <option value="" disabled>Select Year</option>
+                {Array.from({ length: 2020 - 1975 + 1 }, (_, i) => 1975 + i).map(year => (
                   <option key={year} value={year}>{year}</option>
                 ))}
               </select>
