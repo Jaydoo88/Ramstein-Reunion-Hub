@@ -47,9 +47,9 @@ export const siteContent = {
       },
       {
         day: "Saturday",
-        time: "10:00 AM - 2:00 PM",
-        title: "Base Tour & School Visit",
-        description: "Subject to approval, a tour down memory lane.",
+        time: "TBD",
+        title: "Dallas Event (TBD)",
+        description: "Details coming soon — we’ll post the exact location and time once confirmed.",
       },
       {
         day: "Saturday",
@@ -60,8 +60,8 @@ export const siteContent = {
       {
         day: "Sunday",
         time: "10:00 AM - 1:00 PM",
-        title: "Farewell Picnic",
-        description: "A relaxed gathering before we all head home.",
+        title: "Farewell Breakfast",
+        description: "A relaxed breakfast before we all head home.",
       },
     ],
   },
