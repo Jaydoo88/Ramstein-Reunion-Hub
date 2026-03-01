@@ -29,8 +29,8 @@ export const siteContent = {
   // REUNION INFO
   reunionInfo: {
     title: "Reunion Details",
-    description: "We are still in the early stages of planning the ultimate 40-year reunion. We want to hear from you! What activities would you like to see? Where should we host the main event?",
-    location: "Location: TBD (Ramstein-Miesenbach area or Stateside)",
+    description: "We are still in the early stages of planning the ultimate 40-year reunion. We want to hear from you! What activities would you like to see?",
+    location: "Location: Dallas, TX",
     dates: "Dates: Summer 2028 (Exact weekend TBD)",
   },
 
@@ -116,7 +116,7 @@ export const siteContent = {
       },
       {
         q: "Where will it be held?",
-        a: "The location is still TBD. We are considering options both near Ramstein and stateside. Let us know your preference!",
+        a: "The reunion location is set: Dallas, TX. We’re keeping it simple with one stateside meetup — hope to see you there!",
       },
       {
         q: "How much will tickets cost?",
