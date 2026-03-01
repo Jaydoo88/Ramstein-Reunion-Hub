@@ -374,7 +374,8 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
           .upload(filePath, photoFile);
 
         if (uploadError) {
-          throw uploadError;
+          console.error("Storage upload error details:", uploadError);
+          throw new Error(`Photo upload failed: ${uploadError.message}. Details: ${uploadError.details || 'N/A'}`);
         }
         
         const { data: { publicUrl } } = supabase.storage
@@ -384,10 +385,10 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         uploadedPhotoUrl = publicUrl;
       }
 
-      const { error } = await supabase.from("memories").insert([{
+      const { error: insertError } = await supabase.from("memories").insert([{
         status: "PENDING",
         submitter_name: formData.author,
-        grad_year: formData.gradYear,
+        grad_year: parseInt(formData.gradYear, 10),
         honoree_name: formData.inMemoryOf || null,
         title: formData.title,
         memory_text: formData.content,
@@ -395,7 +396,10 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         submitter_email: formData.email || null
       }]);
 
-      if (error) throw error;
+      if (insertError) {
+        console.error("Database insert error details:", insertError);
+        throw new Error(`DB Error: ${insertError.message} | Details: ${insertError.details || 'none'} | Hint: ${insertError.hint || 'none'}`);
+      }
 
       // Create new pending memory
       const newMemory: Memory = {
@@ -429,11 +433,11 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         description: "We'll review it before it appears on the wall.",
         className: "bg-green-50 border-green-200 text-green-800",
       });
-    } catch (error) {
-      console.error("Error submitting memory:", error);
+    } catch (error: any) {
+      console.error("Caught exception submitting memory:", error);
       toast({
-        title: "Error",
-        description: "Failed to submit memory. Please try again.",
+        title: "Submission Failed",
+        description: error.message || "Unknown error occurred.",
         variant: "destructive"
       });
     } finally {
