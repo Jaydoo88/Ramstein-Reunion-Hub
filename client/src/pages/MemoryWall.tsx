@@ -18,6 +18,7 @@ interface Memory {
   inMemoryOf?: string;
   date: string;
   status: MemoryStatus;
+  photoUrl?: string;
 }
 
 // --- Mock Data ---
@@ -103,6 +104,7 @@ export default function MemoryWall() {
             inMemoryOf: row.honoree_name || undefined,
             date: row.created_at,
             status: row.status as MemoryStatus,
+            photoUrl: row.photo_url || undefined,
           }));
           setMemories(formattedMemories);
         }
@@ -253,6 +255,16 @@ export default function MemoryWall() {
                     <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">Class of '{memory.gradYear.substring(2)}</span>
                   </div>
                   
+                  {memory.photoUrl && (
+                    <div className="w-full h-48 mb-4 overflow-hidden rounded bg-gray-100 flex-shrink-0">
+                      <img 
+                        src={memory.photoUrl} 
+                        alt="Memory attachment" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  
                   <p className="text-gray-600 text-sm flex-grow mb-4 relative">
                     {memory.content.length > 180 
                       ? `${memory.content.substring(0, 180)}...` 
@@ -301,7 +313,16 @@ export default function MemoryWall() {
                   <span>{new Date(selectedMemory.date).toLocaleDateString()}</span>
                 </div>
               </div>
-              <div className="p-6 md:p-8">
+              <div className="p-6 md:p-8 overflow-y-auto max-h-[60vh]">
+                {selectedMemory.photoUrl && (
+                  <div className="w-full max-h-80 mb-6 overflow-hidden rounded bg-gray-100 flex justify-center">
+                    <img 
+                      src={selectedMemory.photoUrl} 
+                      alt="Memory attachment" 
+                      className="max-w-full max-h-80 object-contain"
+                    />
+                  </div>
+                )}
                 <p className="text-gray-700 leading-relaxed whitespace-pre-wrap font-sans text-base">
                   {selectedMemory.content}
                 </p>
@@ -329,6 +350,7 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
     email: "",
     confirmed: false
   });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -337,6 +359,28 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
     setIsSubmitting(true);
     
     try {
+      let uploadedPhotoUrl = null;
+
+      if (photoFile) {
+        const fileExt = photoFile.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('memory-photos')
+          .upload(filePath, photoFile);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+        
+        const { data: { publicUrl } } = supabase.storage
+          .from('memory-photos')
+          .getPublicUrl(filePath);
+          
+        uploadedPhotoUrl = publicUrl;
+      }
+
       const { error } = await supabase.from("memories").insert([{
         status: "PENDING",
         submitter_name: formData.author,
@@ -344,7 +388,7 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         honoree_name: formData.inMemoryOf || null,
         title: formData.title,
         memory_text: formData.content,
-        photo_url: null,
+        photo_url: uploadedPhotoUrl,
         submitter_email: formData.email || null
       }]);
 
@@ -358,6 +402,7 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         title: formData.title,
         content: formData.content,
         inMemoryOf: formData.inMemoryOf || undefined,
+        photoUrl: uploadedPhotoUrl || undefined,
         date: new Date().toISOString(),
         status: "PENDING" // ALWAYS PENDING!
       };
@@ -374,6 +419,7 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         email: "",
         confirmed: false
       });
+      setPhotoFile(null);
 
       toast({
         title: "Submitted!",
@@ -467,6 +513,21 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
             <p className="text-xs text-gray-500 text-right">
               {formData.content.length}/50 min characters
             </p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="photo" className="text-sm font-bold text-gray-700">Photo (Optional)</label>
+            <input
+              id="photo"
+              type="file"
+              accept="image/*"
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-rhs-blue/10 file:text-rhs-blue hover:file:bg-rhs-blue/20"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setPhotoFile(e.target.files[0]);
+                }
+              }}
+            />
           </div>
 
           <div className="space-y-2">
