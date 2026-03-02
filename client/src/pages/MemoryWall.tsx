@@ -387,7 +387,7 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
                message: uploadError.message,
                statusCode: (uploadError as any).statusCode || 'N/A',
                endpoint: '.../storage/v1/object/memory-photos',
-               url: import.meta.env.VITE_SUPABASE_URL || 'https://plywgbbehmrpsnurhuos.supabase.co'
+               url: import.meta.env.VITE_SUPABASE_URL || 'https://plywbgbehmrpsnurhuos.supabase.co'
             });
             
             console.warn(`Photo upload failed: ${uploadError.message}. Proceeding without photo.`);

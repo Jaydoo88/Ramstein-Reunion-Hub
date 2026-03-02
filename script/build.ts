@@ -16,7 +16,7 @@ console.log("DEBUG PUBLISHING ENV - VITE_SUPABASE_ANON_KEY:", process.env.VITE_S
 // We explicitly write the environment variables (with fallbacks to our known public keys) 
 // to client/.env so Vite's build step natively bakes them into import.meta.env.
 try {
-  const sbUrl = process.env.VITE_SUPABASE_URL || "https://plywgbbehmrpsnurhuos.supabase.co";
+  const sbUrl = process.env.VITE_SUPABASE_URL || "https://plywbgbehmrpsnurhuos.supabase.co";
   const sbKey = process.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_7_zP7jPir0BvWuAeMkqvVA_O61XXgnY";
   
   let envContent = `VITE_SUPABASE_URL=${sbUrl}\nVITE_SUPABASE_ANON_KEY=${sbKey}\n`;
