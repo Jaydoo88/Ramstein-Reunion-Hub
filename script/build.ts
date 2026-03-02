@@ -1,9 +1,16 @@
+import dotenv from "dotenv";
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
 
-// server deps to bundle to reduce openat(2) syscalls
-// which helps cold start times
+// Load env vars before building client
+dotenv.config({ path: ".env" });
+dotenv.config({ path: ".env.production" });
+
+console.log("VITE_SUPABASE_URL present at build?", !!process.env.VITE_SUPABASE_URL);
+console.log("VITE_SUPABASE_ANON_KEY present at build?", !!process.env.VITE_SUPABASE_ANON_KEY);
+
+// server deps to bundle
 const allowlist = [
   "@google/generative-ai",
   "axios",
