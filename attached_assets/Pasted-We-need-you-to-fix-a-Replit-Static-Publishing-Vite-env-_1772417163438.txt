@@ -1,0 +1,60 @@
+We need you to fix a Replit Static Publishing / Vite env injection problem. This is not Supabase and not app logic.
+
+Proof: On the live published site, DevTools Console prints:
+
+VITE_SUPABASE_URL: undefined
+
+VITE_SUPABASE_ANON_KEY set: false
+
+That means the Vite build shipped to production was built without VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY, so Supabase calls fail with TypeError: Failed to fetch.
+
+Our Replit setup:
+
+Publishing → Deployment type: Static pages
+
+Public directory: dist/public
+
+Build command: npm run build
+
+The build runs a custom script: tsx script/build.ts
+
+That script calls await viteBuild() and outputs dist/public/index.html and assets.
+
+In Replit we have “Production app secrets” configured for:
+
+VITE_SUPABASE_URL
+
+VITE_SUPABASE_ANON_KEY
+…but they are clearly NOT being present during the publish build.
+
+What we need from you (do not rewrite app):
+
+Confirm what environment variables are available during the Publishing build step.
+Add a one-time logging step during npm run build or in the publishing pipeline to print:
+
+process.env.VITE_SUPABASE_URL (masked ok)
+
+process.env.VITE_SUPABASE_ANON_KEY (just whether it exists)
+We need to see if Publishing builds have access to “Production app secrets”.
+
+Fix Static Publishing so Vite build receives VITE_ variables* at build time.
+For Vite, env vars must exist at build time (import.meta.env is baked).
+Either:
+
+Ensure Publishing build inherits “Production app secrets”, OR
+
+Provide the correct supported mechanism for static builds to pass build-time env vars.
+
+After fix, verify on the live site that:
+
+import.meta.env.VITE_SUPABASE_URL is NOT undefined
+
+import.meta.env.VITE_SUPABASE_ANON_KEY is truthy
+This is the acceptance criteria.
+
+We need the minimal patch (Replit-side or config change) so publishing works reliably.
+Do not suggest Supabase bucket policies or app logic until the above is fixed, because the app cannot reach Supabase at all when env vars are undefined.
+
+Extra info: We already confirmed Vite output goes to dist/public (contains index.html). This is not a wrong folder issue.
+
+Request: Please escalate to Replit Publishing/Static Pages environment variable injection issue if needed. The current behavior contradicts the “Production app secrets” UI.
