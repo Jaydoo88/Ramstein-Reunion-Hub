@@ -83,6 +83,18 @@ export function Teasers() {
                       {teaser.buttonText}
                     </Button>
                   </Link>
+                ) : index === 1 ? (
+                  <Link href="/photo-gallery" className="w-full mt-auto block">
+                    <Button 
+                      variant="outline" 
+                      className={`w-full border-2 font-bold uppercase tracking-wider rounded-none
+                        ${teaser.textColor === 'text-rhs-blue' ? 'border-rhs-blue text-rhs-blue hover:bg-rhs-blue hover:text-white' : 
+                          teaser.textColor === 'text-rhs-red' ? 'border-rhs-red text-rhs-red hover:bg-rhs-red hover:text-white' : 
+                          'border-rhs-navy text-rhs-navy hover:bg-rhs-navy hover:text-white'}`}
+                    >
+                      VIEW PHOTO GALLERY
+                    </Button>
+                  </Link>
                 ) : (
                   <Button 
                     variant="outline" 

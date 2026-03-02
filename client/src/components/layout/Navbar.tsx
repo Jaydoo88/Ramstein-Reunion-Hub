@@ -19,10 +19,11 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Details", href: "#details" },
-    { name: "Schedule", href: "#schedule" },
-    { name: "Memories", href: "#memories" },
-    { name: "FAQ", href: "#faq" },
+    { name: "Details", href: "/#details" },
+    { name: "Schedule", href: "/#schedule" },
+    { name: "Memories", href: "/memory-wall" },
+    { name: "Photos", href: "/photo-gallery" },
+    { name: "FAQ", href: "/#faq" },
   ];
 
   return (
