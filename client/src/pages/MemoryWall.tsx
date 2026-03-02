@@ -361,43 +361,59 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
     e.preventDefault();
     setIsSubmitting(true);
     
+    // Debug logging for production env vars
+    console.log("Supabase Env Check:", {
+      url: import.meta.env.VITE_SUPABASE_URL,
+      hasAnonKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY
+    });
+    
     try {
       let uploadedPhotoUrl = null;
 
       if (photoFile) {
-        const fileExt = photoFile.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `${fileName}`;
+        try {
+          const fileExt = photoFile.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const filePath = `${fileName}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from('memory-photos')
-          .upload(filePath, photoFile);
+          const { error: uploadError } = await supabase.storage
+            .from('memory-photos')
+            .upload(filePath, photoFile);
 
-        if (uploadError) {
-          // Log complete error details including statusCode and the URL being used
-          console.error("Storage upload error details:", {
-             error: uploadError,
-             message: uploadError.message,
-             statusCode: (uploadError as any).statusCode || 'N/A',
-             url: import.meta.env.VITE_SUPABASE_URL || 'https://plywgbbehmrpsnurhuos.supabase.co'
-          });
-          
-          console.warn(`Photo upload failed: ${uploadError.message}. Proceeding without photo.`);
-          // We don't throw here, we just leave uploadedPhotoUrl as null
+          if (uploadError) {
+            // Log complete error details including statusCode and the URL being used
+            console.error("Storage upload error details:", {
+               error: uploadError,
+               message: uploadError.message,
+               statusCode: (uploadError as any).statusCode || 'N/A',
+               endpoint: '.../storage/v1/object/memory-photos',
+               url: import.meta.env.VITE_SUPABASE_URL || 'https://plywgbbehmrpsnurhuos.supabase.co'
+            });
+            
+            console.warn(`Photo upload failed: ${uploadError.message}. Proceeding without photo.`);
+            toast({
+              title: "Photo Upload Failed",
+              description: "Your memory will be submitted without the photo.",
+              variant: "default",
+            });
+          } else {
+            const { data: { publicUrl } } = supabase.storage
+              .from('memory-photos')
+              .getPublicUrl(filePath);
+              
+            uploadedPhotoUrl = publicUrl;
+          }
+        } catch (uploadException: any) {
+          console.error("Exception during storage upload (likely CORS/Network):", uploadException);
           toast({
-            title: "Photo Upload Failed",
-            description: "Your memory will be submitted without the photo.",
+            title: "Photo Upload Exception",
+            description: "Network error during photo upload. Proceeding without photo.",
             variant: "default",
           });
-        } else {
-          const { data: { publicUrl } } = supabase.storage
-            .from('memory-photos')
-            .getPublicUrl(filePath);
-            
-          uploadedPhotoUrl = publicUrl;
         }
       }
 
+      // Proceed with DB insert
       const { error: insertError } = await supabase.from("memories").insert([{
         status: "PENDING",
         submitter_name: formData.author,
@@ -410,8 +426,19 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
       }]);
 
       if (insertError) {
-        console.error("Database insert error details:", insertError);
-        throw new Error(`DB Error: ${insertError.message} | Details: ${insertError.details || 'none'} | Hint: ${insertError.hint || 'none'}`);
+        console.error("Database insert error details:", {
+          error: insertError,
+          endpoint: '.../rest/v1/memories',
+          message: insertError.message,
+          details: insertError.details
+        });
+        
+        let errorMessage = insertError.message;
+        if (errorMessage.includes("Failed to fetch")) {
+          errorMessage = "Network Error (Failed to fetch). This is likely a CORS issue. Please add 'https://www.royals88reunion.com' to your Supabase API allowed origins, or ensure the Supabase project is not paused.";
+        }
+        
+        throw new Error(`DB Error: ${errorMessage} | Details: ${insertError.details || 'none'} | Hint: ${insertError.hint || 'none'}`);
       }
 
       // Create new pending memory
@@ -447,7 +474,7 @@ function SubmitMemoryModal({ onAddMemory }: { onAddMemory: (m: Memory) => void }
         className: "bg-green-50 border-green-200 text-green-800",
       });
     } catch (error: any) {
-      console.error("Caught exception submitting memory:", error);
+      console.error("Caught exception submitting memory (likely CORS/Network):", error);
       toast({
         title: "Submission Failed",
         description: error.message || "Unknown error occurred.",
