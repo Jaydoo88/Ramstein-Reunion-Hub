@@ -259,11 +259,11 @@ export default function MemoryWall() {
                   </div>
                   
                   {memory.photoUrl && (
-                    <div className="w-full h-48 mb-4 overflow-hidden rounded bg-gray-100 flex-shrink-0">
+                    <div className="w-full h-48 mb-4 overflow-hidden rounded bg-gray-100 flex-shrink-0 flex items-center justify-center">
                       <img 
                         src={memory.photoUrl} 
                         alt="Memory attachment" 
-                        className="w-full h-full object-cover"
+                        className="max-w-full max-h-full object-contain"
                       />
                     </div>
                   )}
