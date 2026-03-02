@@ -12,14 +12,17 @@ console.log("DEBUG PUBLISHING ENV - VITE_SUPABASE_URL:", url ? `${url.substring(
 console.log("DEBUG PUBLISHING ENV - VITE_SUPABASE_ANON_KEY:", process.env.VITE_SUPABASE_ANON_KEY ? "EXISTS" : "UNDEFINED");
 
 // FORCE VITE TO SEE ENV VARS BY WRITING TO client/.env
+// Replit's Static Publishing build step sometimes does not inject UI secrets into process.env.
+// We explicitly write the environment variables (with fallbacks to our known public keys) 
+// to client/.env so Vite's build step natively bakes them into import.meta.env.
 try {
-  let envContent = "";
-  if (process.env.VITE_SUPABASE_URL) envContent += `VITE_SUPABASE_URL=${process.env.VITE_SUPABASE_URL}\n`;
-  if (process.env.VITE_SUPABASE_ANON_KEY) envContent += `VITE_SUPABASE_ANON_KEY=${process.env.VITE_SUPABASE_ANON_KEY}\n`;
-  if (envContent) {
-    await writeFile("client/.env", envContent);
-    console.log("DEBUG PUBLISHING ENV - Successfully wrote client/.env to inject vars into Vite build");
-  }
+  const sbUrl = process.env.VITE_SUPABASE_URL || "https://plywgbbehmrpsnurhuos.supabase.co";
+  const sbKey = process.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_7_zP7jPir0BvWuAeMkqvVA_O61XXgnY";
+  
+  let envContent = `VITE_SUPABASE_URL=${sbUrl}\nVITE_SUPABASE_ANON_KEY=${sbKey}\n`;
+  
+  await writeFile("client/.env", envContent);
+  console.log("DEBUG PUBLISHING ENV - Successfully wrote client/.env with Supabase keys to ensure Vite injection.");
 } catch (e) {
   console.error("Failed to write client/.env", e);
 }
