@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
 import { Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface Photo {
   id: string;
@@ -15,6 +16,7 @@ interface Photo {
 export default function PhotoGallery() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -82,25 +84,75 @@ export default function PhotoGallery() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {photos.map((photo) => (
-              <div key={photo.id} className="group relative bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow aspect-square flex flex-col">
-                <div className="flex-grow w-full h-full bg-gray-100 relative overflow-hidden flex items-center justify-center">
+              <div 
+                key={photo.id} 
+                className="group relative bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col cursor-pointer"
+                onClick={() => setSelectedPhoto(photo)}
+              >
+                <div className="w-full aspect-square bg-gray-100 relative overflow-hidden flex items-center justify-center">
                   <img
                     src={photo.public_url}
                     alt={photo.caption || "Gallery photo"}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  {(photo.caption || photo.uploader_name) && (
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                      {photo.caption && <p className="text-white text-sm font-medium line-clamp-2 mb-1">{photo.caption}</p>}
-                      {photo.uploader_name && <p className="text-gray-300 text-xs">By {photo.uploader_name}</p>}
-                    </div>
-                  )}
                 </div>
+                {(photo.caption || photo.uploader_name) && (
+                  <div className="p-4 bg-white border-t border-gray-50 flex-grow">
+                    {photo.caption && (
+                      <p className="text-gray-900 text-sm font-medium line-clamp-2 mb-1">
+                        {photo.caption}
+                      </p>
+                    )}
+                    {photo.uploader_name && (
+                      <p className="text-gray-500 text-xs">
+                        By {photo.uploader_name}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Lightbox / Expanded View Modal */}
+      <Dialog open={!!selectedPhoto} onOpenChange={(open) => !open && setSelectedPhoto(null)}>
+        <DialogContent className="max-w-4xl p-0 overflow-hidden bg-black/95 border-none shadow-2xl">
+          {selectedPhoto && (
+            <div className="flex flex-col max-h-[90vh]">
+              {/* Image Section */}
+              <div className="relative flex-grow flex items-center justify-center p-4 bg-black min-h-[50vh]">
+                <img 
+                  src={selectedPhoto.public_url} 
+                  alt={selectedPhoto.caption || "Expanded gallery photo"} 
+                  className="max-w-full max-h-[75vh] object-contain"
+                />
+              </div>
+              
+              {/* Caption Section */}
+              {(selectedPhoto.caption || selectedPhoto.uploader_name) && (
+                <div className="bg-zinc-900 p-6 text-white border-t border-zinc-800">
+                  <DialogTitle className="sr-only">Photo Details</DialogTitle>
+                  <DialogDescription className="sr-only">Caption and uploader information for the selected photo</DialogDescription>
+                  {selectedPhoto.caption && (
+                    <p className="font-serif text-xl mb-2 text-zinc-100">
+                      {selectedPhoto.caption}
+                    </p>
+                  )}
+                  <div className="flex items-center gap-3 text-sm text-zinc-400">
+                    {selectedPhoto.uploader_name && (
+                      <span className="font-medium text-zinc-300">By {selectedPhoto.uploader_name}</span>
+                    )}
+                    {selectedPhoto.uploader_name && <span className="w-1 h-1 rounded-full bg-zinc-600"></span>}
+                    <span>{new Date(selectedPhoto.created_at).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
