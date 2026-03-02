@@ -99,15 +99,15 @@ export default function MemoryWall() {
 
         if (data) {
           const formattedMemories: Memory[] = data.map((row: any) => ({
-            id: row.id.toString(),
-            author: row.submitter_name,
-            gradYear: row.grad_year,
-            title: row.title,
-            content: row.memory_text,
-            inMemoryOf: row.honoree_name || undefined,
-            date: row.created_at,
-            status: row.status as MemoryStatus,
-            photoUrl: row.photo_url || undefined,
+            id: row.id ? String(row.id) : Math.random().toString(),
+            author: String(row.submitter_name || "Anonymous"),
+            gradYear: row.grad_year ? String(row.grad_year) : "1988",
+            title: String(row.title || "Memory"),
+            content: String(row.memory_text || ""),
+            inMemoryOf: row.honoree_name ? String(row.honoree_name) : undefined,
+            date: row.created_at ? String(row.created_at) : new Date().toISOString(),
+            status: String(row.status || "PENDING") as MemoryStatus,
+            photoUrl: row.photo_url ? String(row.photo_url) : undefined,
           }));
           setMemories(formattedMemories);
         }
@@ -255,7 +255,7 @@ export default function MemoryWall() {
                   <div className="flex items-center gap-2 mb-4 text-sm text-gray-500">
                     <UserRound className="h-4 w-4" />
                     <span className="font-medium text-gray-700">{memory.author}</span>
-                    <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">Class of '{memory.gradYear.substring(2)}</span>
+                    <span className="bg-gray-100 px-2 py-0.5 rounded text-xs">Class of '{String(memory.gradYear || "88").substring(2)}</span>
                   </div>
                   
                   {memory.photoUrl && (
@@ -269,8 +269,8 @@ export default function MemoryWall() {
                   )}
                   
                   <p className="text-gray-600 text-sm flex-grow mb-4 relative">
-                    {memory.content.length > 180 
-                      ? `${memory.content.substring(0, 180)}...` 
+                    {String(memory.content || "").length > 180 
+                      ? `${String(memory.content || "").substring(0, 180)}...` 
                       : memory.content}
                   </p>
                   
