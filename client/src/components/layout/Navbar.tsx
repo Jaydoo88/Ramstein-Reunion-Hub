@@ -26,6 +26,38 @@ export function Navbar() {
     { name: "FAQ", href: "/#faq" },
   ];
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    
+    if (href.startsWith('/#')) {
+      const targetId = href.substring(2);
+      
+      if (location === '/') {
+        // Already on home page, just scroll
+        const elem = document.getElementById(targetId);
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', href);
+        }
+      } else {
+        // Not on home page, navigate to '/' first
+        setLocation('/');
+        
+        // Wait for the Home component to mount and render, then scroll
+        setTimeout(() => {
+          const elem = document.getElementById(targetId);
+          if (elem) {
+            elem.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 150);
+      }
+    } else {
+      // Normal route navigation
+      setLocation(href);
+      window.scrollTo(0, 0);
+    }
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -55,6 +87,7 @@ export function Navbar() {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-sm font-bold text-foreground hover:text-primary transition-colors uppercase tracking-widest relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all hover:after:w-full"
                 data-testid={`link-nav-${link.name.toLowerCase()}`}
               >
@@ -88,7 +121,13 @@ export function Navbar() {
                 key={link.name}
                 href={link.href}
                 className="block px-3 py-2 text-base font-bold text-foreground hover:text-primary hover:bg-muted rounded-md uppercase tracking-wider"
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => {
+                  handleNavClick(e, link.href);
+                  // Only close menu if we prevented default (meaning we're on the same page and scrolled).
+                  // If we didn't prevent default, the page will navigate anyway.
+                  // But let's just close it always.
+                  setIsOpen(false);
+                }}
                 data-testid={`link-mobile-${link.name.toLowerCase()}`}
               >
                 {link.name}
