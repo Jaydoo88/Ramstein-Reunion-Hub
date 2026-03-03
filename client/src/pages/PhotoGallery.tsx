@@ -89,11 +89,11 @@ export default function PhotoGallery() {
                 className="group relative bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col cursor-pointer"
                 onClick={() => setSelectedPhoto(photo)}
               >
-                <div className="w-full aspect-square bg-gray-100 relative overflow-hidden flex items-center justify-center">
+                <div className="w-full h-48 bg-gray-100 relative overflow-hidden flex items-center justify-center">
                   <img
                     src={photo.public_url}
                     alt={photo.caption || "Gallery photo"}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
                 {(photo.caption || photo.uploader_name) && (
