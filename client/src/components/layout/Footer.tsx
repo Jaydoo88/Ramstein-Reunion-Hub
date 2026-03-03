@@ -33,10 +33,11 @@ export function Footer() {
           <div>
             <h4 className="font-display text-rhs-gold text-lg mb-4 tracking-wider uppercase">Navigation</h4>
             <ul className="space-y-2 font-sans text-sm">
-              <li><a href="#details" className="text-gray-300 hover:text-white transition-colors">Reunion Details</a></li>
-              <li><a href="#schedule" className="text-gray-300 hover:text-white transition-colors">Draft Schedule</a></li>
-              <li><a href="#memories" className="text-gray-300 hover:text-white transition-colors">Memory Wall</a></li>
-              <li><a href="#faq" className="text-gray-300 hover:text-white transition-colors">FAQ</a></li>
+              <li><a href="/#details" className="text-gray-300 hover:text-white transition-colors">Reunion Details</a></li>
+              <li><a href="/#schedule" className="text-gray-300 hover:text-white transition-colors">Draft Schedule</a></li>
+              <li><a href="/#memories" className="text-gray-300 hover:text-white transition-colors">Memory Wall</a></li>
+              <li><a href="/photo-gallery" className="text-gray-300 hover:text-white transition-colors">Photo Gallery</a></li>
+              <li><a href="/#faq" className="text-gray-300 hover:text-white transition-colors">FAQ</a></li>
             </ul>
           </div>
 

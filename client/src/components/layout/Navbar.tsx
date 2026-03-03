@@ -7,7 +7,7 @@ import rhsLogo from "@assets/rhslogo_1772235631217.jpeg";
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,9 +27,9 @@ export function Navbar() {
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    
+    // Only intercept and prevent default for hash links that need scrolling
     if (href.startsWith('/#')) {
+      e.preventDefault();
       const targetId = href.substring(2);
       
       if (location === '/') {
@@ -52,7 +52,10 @@ export function Navbar() {
         }, 150);
       }
     } else {
-      // Normal route navigation
+      // Normal route navigation (like /photo-gallery)
+      // wouter's <Link> component handles normal hrefs properly when we don't preventDefault()
+      // But since we are using plain <a> tags here, we need to explicitly use setLocation
+      e.preventDefault();
       setLocation(href);
       window.scrollTo(0, 0);
     }
