@@ -33,7 +33,8 @@ export default function PhotoGallery() {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   
   // Local state for mock features
-  const [localLikes, setLocalLikes] = useState<Record<string, number>>({});
+  // localLikes stores whether the current user has liked a photo (true/false)
+  const [localLikes, setLocalLikes] = useState<Record<string, boolean>>({});
   const [localComments, setLocalComments] = useState<Record<string, Comment[]>>({});
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
@@ -69,7 +70,7 @@ export default function PhotoGallery() {
     e.stopPropagation(); // Prevent opening modal if clicking like on the card
     setLocalLikes(prev => ({
       ...prev,
-      [photoId]: (prev[photoId] || 0) + 1
+      [photoId]: !prev[photoId] // Toggle the boolean state
     }));
   };
 
@@ -93,7 +94,7 @@ export default function PhotoGallery() {
   };
 
   const getLikes = (photo: Photo) => {
-    return (photo.like_count || 0) + (localLikes[photo.id] || 0);
+    return (photo.like_count || 0) + (localLikes[photo.id] ? 1 : 0);
   };
 
   const getCommentsCount = (photo: Photo) => {
@@ -209,10 +210,10 @@ export default function PhotoGallery() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="flex-1 text-gray-600 hover:bg-gray-100"
+                      className={`flex-1 hover:bg-gray-100 ${localLikes[photo.id] ? 'text-rhs-red' : 'text-gray-600'}`}
                       onClick={(e) => handleLike(e, photo.id)}
                     >
-                      <ThumbsUp className="w-4 h-4 mr-2" />
+                      <ThumbsUp className={`w-4 h-4 mr-2 ${localLikes[photo.id] ? 'fill-current' : ''}`} />
                       Like
                     </Button>
                     <Button 
@@ -285,8 +286,14 @@ export default function PhotoGallery() {
 
                   {/* Action Buttons */}
                   <div className="flex justify-between py-1 border-b border-gray-100">
-                    <Button variant="ghost" size="sm" className="flex-1 text-gray-600 font-semibold" onClick={(e) => handleLike(e, selectedPhoto.id)}>
-                      <ThumbsUp className="w-4 h-4 mr-2" /> Like
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className={`flex-1 font-semibold ${localLikes[selectedPhoto.id] ? 'text-rhs-red hover:text-rhs-red hover:bg-red-50' : 'text-gray-600 hover:bg-gray-100'}`} 
+                      onClick={(e) => handleLike(e, selectedPhoto.id)}
+                    >
+                      <ThumbsUp className={`w-4 h-4 mr-2 ${localLikes[selectedPhoto.id] ? 'fill-current' : ''}`} /> 
+                      Like
                     </Button>
                     <Button variant="ghost" size="sm" className="flex-1 text-gray-600 font-semibold" onClick={() => document.getElementById('comment-input')?.focus()}>
                       <MessageCircle className="w-4 h-4 mr-2" /> Comment
