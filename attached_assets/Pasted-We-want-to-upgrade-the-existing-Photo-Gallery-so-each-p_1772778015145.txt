@@ -1,0 +1,114 @@
+We want to upgrade the existing Photo Gallery so each photo behaves like a Facebook-style post.
+
+For now, go ahead and build the feature using our existing photo gallery setup, and we will create/store the needed data in Supabase.
+
+What to build
+1) Upgrade each gallery photo card
+
+Each photo in the gallery should display:
+
+the image
+
+title/caption if available
+
+like count
+
+comment count
+
+interaction row underneath with:
+
+Like
+
+Comment
+
+Share
+
+Style it similar to a Facebook post interaction bar, but keep it matched to our site design.
+
+2) Click photo behavior
+
+When a user clicks a photo:
+
+open a modal/lightbox
+
+show the full image
+
+show the title/caption/details
+
+show likes/comments summary
+
+show the comments thread under the image
+
+show a form to add a new comment
+
+3) Comments
+
+Each photo needs its own comments thread.
+
+Set this up so comments are stored separately and linked to each photo by photo_id.
+
+We will use Supabase for storage.
+
+4) Likes
+
+Each photo needs a like count.
+
+For now, it is fine to build this so the photo/post supports a like counter structure and UI. We will use Supabase storage for the real like tracking.
+
+5) Share button
+
+Each photo should have a Share button.
+
+Use Web Share API where available
+
+Fallback to copying the direct link to clipboard
+
+Show a confirmation message like “Link copied”
+
+6) Backend structure to prepare for
+
+Use our existing photo gallery table as the base.
+
+Add any needed columns there such as:
+
+title
+
+caption
+
+like_count
+
+comment_count
+
+Then create a separate comments table structure linked by photo_id.
+
+We will create/store this in Supabase.
+
+7) Modal / detail view
+
+Inside the photo modal:
+
+large image
+
+metadata/caption
+
+likes/comments summary
+
+comments list
+
+comment form at the bottom
+
+8) Important
+
+Build this in a reusable way so it is easy to connect to Supabase and expand later.
+
+Do not break the current photo gallery.
+
+9) What I need back
+
+Please tell me:
+
+what components/files you added or changed
+
+what table/column structure you expect in Supabase
+
+whether the current build is UI only or already wired for real data
