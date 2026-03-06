@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
-import { Loader2, ArrowLeft, Heart, MessageCircle, ThumbsUp, Send } from "lucide-react";
+import { Loader2, ArrowLeft, Heart, MessageCircle, ThumbsUp, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -263,10 +263,18 @@ export default function PhotoGallery() {
                   <div className="w-10 h-10 rounded-full bg-rhs-navy text-white flex items-center justify-center font-bold">
                     {selectedPhoto.uploader_name ? selectedPhoto.uploader_name.charAt(0).toUpperCase() : 'A'}
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <div className="font-bold text-gray-900">{selectedPhoto.uploader_name || 'Anonymous Alumni'}</div>
                     <div className="text-xs text-gray-500">{new Date(selectedPhoto.created_at).toLocaleDateString()}</div>
                   </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-full h-8 w-8 ml-auto"
+                    onClick={() => setSelectedPhoto(null)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
                 </div>
 
                 {/* Scrollable Content Area */}
