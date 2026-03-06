@@ -163,15 +163,21 @@ export default function PhotoGallery() {
 
                 {/* Photo Image */}
                 <div 
-                  className="w-full bg-gray-100 relative overflow-hidden flex items-center justify-center cursor-pointer group"
+                  className="w-full h-72 relative overflow-hidden flex items-center justify-center cursor-pointer group bg-zinc-900"
                   onClick={() => setSelectedPhoto(photo)}
                 >
+                  {/* Blurred Background to fill space without white space */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-40 blur-xl scale-125"
+                    style={{ backgroundImage: `url(${photo.public_url})` }}
+                  />
+                  {/* Actual Image, uncropped */}
                   <img
                     src={photo.public_url}
                     alt={photo.caption || "Gallery photo"}
-                    className="w-full h-auto max-h-[600px] object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-contain relative z-10 transition-transform duration-300 group-hover:scale-105 shadow-2xl"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center z-20">
                     <Button variant="secondary" className="opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
                       View Full
                     </Button>
