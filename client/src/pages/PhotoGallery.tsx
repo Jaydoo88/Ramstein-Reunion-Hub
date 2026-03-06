@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
-import { Loader2, ArrowLeft, Heart, MessageCircle, Share2, ThumbsUp, Send } from "lucide-react";
+import { Loader2, ArrowLeft, Heart, MessageCircle, ThumbsUp, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -71,30 +71,6 @@ export default function PhotoGallery() {
       ...prev,
       [photoId]: (prev[photoId] || 0) + 1
     }));
-  };
-
-  const handleShare = async (e: React.MouseEvent, photoId: string) => {
-    e.stopPropagation();
-    const url = window.location.href.split('#')[0]; // Current page URL
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Ramstein Class of 88 Photo',
-          text: 'Check out this photo from the Ramstein High School Class of 1988 gallery!',
-          url: url,
-        });
-      } catch (err) {
-        console.log('Error sharing', err);
-      }
-    } else {
-      // Fallback
-      navigator.clipboard.writeText(url);
-      toast({
-        title: "Link copied!",
-        description: "The link to this gallery has been copied to your clipboard.",
-      });
-    }
   };
 
   const handleAddComment = (e: React.FormEvent) => {
@@ -186,13 +162,13 @@ export default function PhotoGallery() {
 
                 {/* Photo Image */}
                 <div 
-                  className="w-full h-64 bg-gray-100 relative overflow-hidden flex items-center justify-center cursor-pointer group"
+                  className="w-full bg-gray-100 relative overflow-hidden flex items-center justify-center cursor-pointer group"
                   onClick={() => setSelectedPhoto(photo)}
                 >
                   <img
                     src={photo.public_url}
                     alt={photo.caption || "Gallery photo"}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-auto max-h-[600px] object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                     <Button variant="secondary" className="opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
@@ -218,7 +194,7 @@ export default function PhotoGallery() {
                   {/* Stats Row */}
                   <div className="flex justify-between items-center text-xs text-gray-500 mb-3 pb-3 border-b border-gray-100">
                     <div className="flex items-center gap-1">
-                      <div className="bg-rhs-blue w-4 h-4 rounded-full flex items-center justify-center">
+                      <div className="bg-rhs-red w-4 h-4 rounded-full flex items-center justify-center">
                         <ThumbsUp className="w-2 h-2 text-white fill-white" />
                       </div>
                       <span>{getLikes(photo)}</span>
@@ -247,15 +223,6 @@ export default function PhotoGallery() {
                     >
                       <MessageCircle className="w-4 h-4 mr-2" />
                       Comment
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="flex-1 text-gray-600 hover:bg-gray-100"
-                      onClick={(e) => handleShare(e, photo.id)}
-                    >
-                      <Share2 className="w-4 h-4 mr-2" />
-                      Share
                     </Button>
                   </div>
                 </div>
@@ -308,7 +275,7 @@ export default function PhotoGallery() {
                   {/* Stats Summary */}
                   <div className="flex items-center justify-between text-sm text-gray-500 py-2 border-y border-gray-100">
                     <div className="flex items-center gap-1.5">
-                      <div className="bg-rhs-blue w-5 h-5 rounded-full flex items-center justify-center">
+                      <div className="bg-rhs-red w-5 h-5 rounded-full flex items-center justify-center">
                         <ThumbsUp className="w-3 h-3 text-white fill-white" />
                       </div>
                       <span>{getLikes(selectedPhoto)}</span>
@@ -323,9 +290,6 @@ export default function PhotoGallery() {
                     </Button>
                     <Button variant="ghost" size="sm" className="flex-1 text-gray-600 font-semibold" onClick={() => document.getElementById('comment-input')?.focus()}>
                       <MessageCircle className="w-4 h-4 mr-2" /> Comment
-                    </Button>
-                    <Button variant="ghost" size="sm" className="flex-1 text-gray-600 font-semibold" onClick={(e) => handleShare(e, selectedPhoto.id)}>
-                      <Share2 className="w-4 h-4 mr-2" /> Share
                     </Button>
                   </div>
 
