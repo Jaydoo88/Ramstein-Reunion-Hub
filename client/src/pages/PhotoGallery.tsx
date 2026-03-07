@@ -37,6 +37,8 @@ export default function PhotoGallery() {
   const [localLikes, setLocalLikes] = useState<Record<string, boolean>>({});
   const [localComments, setLocalComments] = useState<Record<string, Comment[]>>({});
   const [newComment, setNewComment] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [isSubmittingLike, setIsSubmittingLike] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
 
   // Fetch comments when a photo is selected
@@ -109,6 +111,12 @@ export default function PhotoGallery() {
   const handleLike = async (e: React.MouseEvent, photoId: string) => {
     e.stopPropagation(); // Prevent opening modal if clicking like on the card
     
+    // Prevent double clicking while request is active
+    if (isSubmittingLike[photoId]) return;
+
+    // Set submitting state
+    setIsSubmittingLike(prev => ({ ...prev, [photoId]: true }));
+    
     // Optimistically update UI
     const isCurrentlyLiked = localLikes[photoId];
     
@@ -119,27 +127,34 @@ export default function PhotoGallery() {
 
     // Find the photo to update its count
     const photoToUpdate = photos.find(p => p.id === photoId);
-    if (!photoToUpdate) return;
+    if (!photoToUpdate) {
+      setIsSubmittingLike(prev => ({ ...prev, [photoId]: false }));
+      return;
+    }
 
     // Calculate new like count (add 1 if not liked before, subtract 1 if unliking)
     const currentCount = photoToUpdate.like_count || 0;
     const newCount = isCurrentlyLiked ? Math.max(0, currentCount - 1) : currentCount + 1;
 
+    console.log(`Sending Like update for Photo ${photoId}: previous count=${currentCount}, new count=${newCount}`);
+
     try {
       // Update in Supabase
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('gallery_photos')
         .update({ like_count: newCount })
-        .eq('id', photoId);
+        .eq('id', photoId)
+        .select();
 
       if (error) {
-        console.error("Error updating likes in Supabase:", error);
+        console.error("Supabase Like Error:", error);
         // Revert local state on failure
         setLocalLikes(prev => ({
           ...prev,
           [photoId]: isCurrentlyLiked
         }));
       } else {
+        console.log("Supabase Like Success. Returned data:", data);
         // Update local photos array so it persists on modal close/open
         setPhotos(prevPhotos => prevPhotos.map(p => 
           p.id === photoId ? { ...p, like_count: newCount } : p
@@ -151,13 +166,24 @@ export default function PhotoGallery() {
         }
       }
     } catch (err) {
-      console.error("Failed to update like", err);
+      console.error("Failed to update like network/system error", err);
+      // Revert local state on failure
+      setLocalLikes(prev => ({
+        ...prev,
+        [photoId]: isCurrentlyLiked
+      }));
+    } finally {
+      setIsSubmittingLike(prev => ({ ...prev, [photoId]: false }));
     }
   };
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPhoto || !newComment.trim()) return;
+    if (!selectedPhoto || !newComment.trim() || isSubmittingComment) return;
+
+    setIsSubmittingComment(true);
+    const commentText = newComment.trim();
+    console.log(`Submitting new comment for Photo ${selectedPhoto.id}: "${commentText}"`);
 
     try {
       // Create new comment in Supabase
@@ -166,20 +192,23 @@ export default function PhotoGallery() {
         .insert({
           photo_id: selectedPhoto.id,
           commenter_name: "Alumni Member", // Hardcoded for prototype
-          comment_text: newComment.trim()
+          comment_text: commentText
         })
         .select()
         .single();
 
       if (commentError) {
-        console.error("Error adding comment:", commentError);
+        console.error("Supabase Comment Insert Error:", commentError);
         toast({
           title: "Error",
           description: "Failed to post your comment. Please try again.",
           variant: "destructive"
         });
+        setIsSubmittingComment(false);
         return;
       }
+
+      console.log("Supabase Comment Insert Success. Returned data:", commentData);
 
       // Update comment count on photo table
       const newCommentCount = (selectedPhoto.comment_count || 0) + 1;
@@ -189,8 +218,9 @@ export default function PhotoGallery() {
         .eq('id', selectedPhoto.id);
 
       if (updateError) {
-        console.error("Error updating comment count:", updateError);
+        console.error("Supabase Comment Count Update Error:", updateError);
       } else {
+        console.log(`Supabase Comment Count Update Success. New count: ${newCommentCount}`);
         // Update local photo state
         setPhotos(prevPhotos => prevPhotos.map(p => 
           p.id === selectedPhoto.id ? { ...p, comment_count: newCommentCount } : p
@@ -207,7 +237,7 @@ export default function PhotoGallery() {
         created_at: commentData.created_at
       };
 
-      // Add to local state immediately
+      // Add to local state immediately (no double-adding, we wait for DB return first)
       setLocalComments(prev => ({
         ...prev,
         [selectedPhoto.id]: [...(prev[selectedPhoto.id] || []), formattedComment]
@@ -215,16 +245,18 @@ export default function PhotoGallery() {
       setNewComment("");
       
     } catch (err) {
-      console.error("Failed to add comment", err);
+      console.error("Failed to add comment network/system error", err);
+    } finally {
+      setIsSubmittingComment(false);
     }
   };
 
   const getLikes = (photo: Photo) => {
-    return (photo.like_count || 0) + (localLikes[photo.id] ? 1 : 0);
+    return photo.like_count || 0;
   };
 
   const getCommentsCount = (photo: Photo) => {
-    return (photo.comment_count || 0) + (localComments[photo.id]?.length || 0);
+    return photo.comment_count || 0;
   };
 
   return (
@@ -344,6 +376,7 @@ export default function PhotoGallery() {
                       size="sm" 
                       className={`flex-1 hover:bg-gray-100 ${localLikes[photo.id] ? 'text-rhs-red' : 'text-gray-600'}`}
                       onClick={(e) => handleLike(e, photo.id)}
+                      disabled={isSubmittingLike[photo.id]}
                     >
                       <ThumbsUp className={`w-4 h-4 mr-2 ${localLikes[photo.id] ? 'fill-current' : ''}`} />
                       Like
@@ -431,6 +464,7 @@ export default function PhotoGallery() {
                       size="sm" 
                       className={`flex-1 font-semibold ${localLikes[selectedPhoto.id] ? 'text-rhs-red hover:text-rhs-red hover:bg-red-50' : 'text-gray-600 hover:bg-gray-100'}`} 
                       onClick={(e) => handleLike(e, selectedPhoto.id)}
+                      disabled={isSubmittingLike[selectedPhoto.id]}
                     >
                       <ThumbsUp className={`w-4 h-4 mr-2 ${localLikes[selectedPhoto.id] ? 'fill-current' : ''}`} /> 
                       Like

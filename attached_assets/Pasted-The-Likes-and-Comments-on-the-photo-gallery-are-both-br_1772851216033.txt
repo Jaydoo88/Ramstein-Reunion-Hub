@@ -1,0 +1,136 @@
+The Likes and Comments on the photo gallery are both broken in the same way:
+
+One click/post is showing as two
+
+The data is not persisting to Supabase
+
+Counts are not staying after refresh
+
+Please fix both features end-to-end.
+
+Likes — what needs to be fixed
+1) One click should only increment once
+
+Check that the Like handler is not firing twice from:
+
+duplicate click handlers
+
+local state update plus Supabase update
+
+nested clickable elements
+
+multiple event bindings
+
+repeated clicks before request completes
+
+2) Persist likes to Supabase
+
+The Like action must actually update gallery_photos.like_count in Supabase, not just update the UI locally.
+
+3) Update UI correctly
+
+Do only one of these:
+
+one optimistic UI update with rollback on failure
+or
+
+update UI only after the Supabase response succeeds
+
+Do not double-update.
+
+4) Prevent duplicate submissions
+
+Disable the Like button while the request is in progress.
+
+Comments — what needs to be fixed
+1) One comment submit should only create one comment
+
+Check that the submit handler is not firing twice from:
+
+both form onSubmit and button onClick
+
+local insert plus Supabase insert
+
+nested event triggers
+
+repeated clicks before request completes
+
+2) Persist comments to Supabase
+
+The comment must insert into gallery_comments, not just update local UI.
+
+3) Do not double-render the comment
+
+If using optimistic UI, do not add it locally and then add it again after fetch/reload.
+
+4) Update comment count correctly
+
+After successful insert:
+
+refresh comments for that photo
+
+update gallery_photos.comment_count by exactly 1
+
+do not increment twice
+
+5) Prevent duplicate submits
+
+Disable the comment submit button while the request is in progress.
+
+Logging / Debugging
+
+Please add full logging for both features so we can see the real cause:
+
+Supabase response and error for Like update
+
+Supabase response and error for comment insert
+
+Supabase response and error for comment count update
+
+We need to know whether:
+
+UI is only updating locally
+
+Supabase update/insert is failing
+
+RLS is blocking update/insert
+
+duplicate handlers are firing
+
+Expected behavior
+Likes
+
+One click = one like
+
+gallery_photos.like_count updates in Supabase
+
+Refreshing page still shows the saved like count
+
+Comments
+
+One submit = one comment
+
+Comment saves in gallery_comments
+
+gallery_photos.comment_count increases by exactly 1
+
+Refreshing page still shows the saved comment
+
+Important
+
+Do not just patch the UI.
+Fix the actual Supabase persistence and duplicate-trigger issue.
+
+What I need back
+
+Please tell me:
+
+what caused the double-like issue
+
+what caused the double-comment issue
+
+why likes/comments were not persisting
+
+what file/component was fixed
+
+whether gallery_photos needed an UPDATE policy
