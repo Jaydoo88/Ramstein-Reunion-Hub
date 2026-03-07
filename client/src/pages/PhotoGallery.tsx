@@ -39,9 +39,49 @@ export default function PhotoGallery() {
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
 
+  // Fetch comments when a photo is selected
+  useEffect(() => {
+    async function fetchComments() {
+      if (!selectedPhoto) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('gallery_comments')
+          .select('*')
+          .eq('photo_id', selectedPhoto.id)
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          console.error("Error fetching comments:", error);
+        } else if (data) {
+          // Format the data to match our UI interface
+          const formattedComments: Comment[] = data.map(c => ({
+            id: c.id,
+            photo_id: c.photo_id,
+            author_name: c.commenter_name,
+            content: c.comment_text,
+            created_at: c.created_at
+          }));
+          
+          setLocalComments(prev => ({
+            ...prev,
+            [selectedPhoto.id]: formattedComments
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to load comments", err);
+      }
+    }
+
+    // Only fetch if we haven't already loaded them
+    if (selectedPhoto && !localComments[selectedPhoto.id]) {
+      fetchComments();
+    }
+  }, [selectedPhoto, localComments]);
+    
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     async function fetchPhotos() {
       setIsLoading(true);
       try {
@@ -66,31 +106,117 @@ export default function PhotoGallery() {
     fetchPhotos();
   }, []);
 
-  const handleLike = (e: React.MouseEvent, photoId: string) => {
+  const handleLike = async (e: React.MouseEvent, photoId: string) => {
     e.stopPropagation(); // Prevent opening modal if clicking like on the card
+    
+    // Optimistically update UI
+    const isCurrentlyLiked = localLikes[photoId];
+    
     setLocalLikes(prev => ({
       ...prev,
-      [photoId]: !prev[photoId] // Toggle the boolean state
+      [photoId]: !isCurrentlyLiked
     }));
+
+    // Find the photo to update its count
+    const photoToUpdate = photos.find(p => p.id === photoId);
+    if (!photoToUpdate) return;
+
+    // Calculate new like count (add 1 if not liked before, subtract 1 if unliking)
+    const currentCount = photoToUpdate.like_count || 0;
+    const newCount = isCurrentlyLiked ? Math.max(0, currentCount - 1) : currentCount + 1;
+
+    try {
+      // Update in Supabase
+      const { error } = await supabase
+        .from('gallery_photos')
+        .update({ like_count: newCount })
+        .eq('id', photoId);
+
+      if (error) {
+        console.error("Error updating likes in Supabase:", error);
+        // Revert local state on failure
+        setLocalLikes(prev => ({
+          ...prev,
+          [photoId]: isCurrentlyLiked
+        }));
+      } else {
+        // Update local photos array so it persists on modal close/open
+        setPhotos(prevPhotos => prevPhotos.map(p => 
+          p.id === photoId ? { ...p, like_count: newCount } : p
+        ));
+        
+        // Update selected photo if it's the one we're liking
+        if (selectedPhoto?.id === photoId) {
+          setSelectedPhoto({ ...selectedPhoto, like_count: newCount });
+        }
+      }
+    } catch (err) {
+      console.error("Failed to update like", err);
+    }
   };
 
-  const handleAddComment = (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPhoto || !newComment.trim()) return;
 
-    const comment: Comment = {
-      id: Date.now().toString(),
-      photo_id: selectedPhoto.id,
-      author_name: "Alumni Member", // Mock current user
-      content: newComment.trim(),
-      created_at: new Date().toISOString()
-    };
+    try {
+      // Create new comment in Supabase
+      const { data: commentData, error: commentError } = await supabase
+        .from('gallery_comments')
+        .insert({
+          photo_id: selectedPhoto.id,
+          commenter_name: "Alumni Member", // Hardcoded for prototype
+          comment_text: newComment.trim()
+        })
+        .select()
+        .single();
 
-    setLocalComments(prev => ({
-      ...prev,
-      [selectedPhoto.id]: [...(prev[selectedPhoto.id] || []), comment]
-    }));
-    setNewComment("");
+      if (commentError) {
+        console.error("Error adding comment:", commentError);
+        toast({
+          title: "Error",
+          description: "Failed to post your comment. Please try again.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Update comment count on photo table
+      const newCommentCount = (selectedPhoto.comment_count || 0) + 1;
+      const { error: updateError } = await supabase
+        .from('gallery_photos')
+        .update({ comment_count: newCommentCount })
+        .eq('id', selectedPhoto.id);
+
+      if (updateError) {
+        console.error("Error updating comment count:", updateError);
+      } else {
+        // Update local photo state
+        setPhotos(prevPhotos => prevPhotos.map(p => 
+          p.id === selectedPhoto.id ? { ...p, comment_count: newCommentCount } : p
+        ));
+        setSelectedPhoto({ ...selectedPhoto, comment_count: newCommentCount });
+      }
+
+      // Format comment to match UI interface
+      const formattedComment: Comment = {
+        id: commentData.id,
+        photo_id: commentData.photo_id,
+        author_name: commentData.commenter_name,
+        content: commentData.comment_text,
+        created_at: commentData.created_at
+      };
+
+      // Add to local state immediately
+      setLocalComments(prev => ({
+        ...prev,
+        [selectedPhoto.id]: [...(prev[selectedPhoto.id] || []), formattedComment]
+      }));
+      setNewComment("");
+      
+    } catch (err) {
+      console.error("Failed to add comment", err);
+    }
   };
 
   const getLikes = (photo: Photo) => {
