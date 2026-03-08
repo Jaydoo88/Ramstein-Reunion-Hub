@@ -37,6 +37,7 @@ export default function PhotoGallery() {
   const [localLikes, setLocalLikes] = useState<Record<string, boolean>>({});
   const [localComments, setLocalComments] = useState<Record<string, Comment[]>>({});
   const [newComment, setNewComment] = useState("");
+  const [commenterName, setCommenterName] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [isSubmittingLike, setIsSubmittingLike] = useState<Record<string, boolean>>({});
   const { toast } = useToast();
@@ -187,11 +188,13 @@ export default function PhotoGallery() {
 
     try {
       // Create new comment in Supabase
+      const finalCommenterName = commenterName.trim() || "Alumni Member";
+      
       const { data: commentData, error: commentError } = await supabase
         .from('gallery_comments')
         .insert({
           photo_id: selectedPhoto.id,
-          commenter_name: "Alumni Member", // Hardcoded for prototype
+          commenter_name: finalCommenterName,
           comment_text: commentText
         })
         .select()
@@ -501,28 +504,43 @@ export default function PhotoGallery() {
 
                 {/* Comment Input */}
                 <div className="p-4 border-t border-gray-200 bg-gray-50 sticky bottom-0">
-                  <form onSubmit={handleAddComment} className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-rhs-navy flex-shrink-0 flex items-center justify-center font-bold text-white text-xs">
-                      ME
+                  <form onSubmit={handleAddComment} className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-rhs-navy flex-shrink-0 flex items-center justify-center font-bold text-white text-xs">
+                        ME
+                      </div>
+                      <div className="flex-1">
+                        <Input
+                          id="commenter-name"
+                          placeholder="Your name (optional)..."
+                          value={commenterName}
+                          onChange={(e) => setCommenterName(e.target.value)}
+                          className="rounded-full bg-white border-gray-200 shadow-sm"
+                          autoComplete="off"
+                        />
+                      </div>
                     </div>
-                    <div className="flex-1 relative">
-                      <Input
-                        id="comment-input"
-                        placeholder="Write a comment..."
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        className="pr-10 rounded-full bg-white"
-                        autoComplete="off"
-                      />
-                      <Button 
-                        type="submit" 
-                        size="icon" 
-                        variant="ghost" 
-                        className="absolute right-1 top-1 h-8 w-8 text-rhs-blue hover:text-rhs-navy hover:bg-transparent"
-                        disabled={!newComment.trim()}
-                      >
-                        <Send className="w-4 h-4" />
-                      </Button>
+                    <div className="flex items-center gap-2 pl-10">
+                      <div className="flex-1 relative">
+                        <Input
+                          id="comment-input"
+                          placeholder="Write a comment..."
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          className="pr-10 rounded-full bg-white border-gray-200 shadow-sm"
+                          autoComplete="off"
+                          disabled={isSubmittingComment}
+                        />
+                        <Button 
+                          type="submit" 
+                          size="icon" 
+                          variant="ghost" 
+                          className="absolute right-1 top-1 h-8 w-8 text-rhs-blue hover:text-rhs-navy hover:bg-transparent"
+                          disabled={!newComment.trim() || isSubmittingComment}
+                        >
+                          {isSubmittingComment ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                        </Button>
+                      </div>
                     </div>
                   </form>
                 </div>
