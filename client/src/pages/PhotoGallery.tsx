@@ -88,16 +88,35 @@ export default function PhotoGallery() {
     async function fetchPhotos() {
       setIsLoading(true);
       try {
-        const { data, error } = await supabase
+        const { data: photosData, error: photosError } = await supabase
           .from('gallery_photos')
           .select('*')
           .eq('status', 'APPROVED')
           .order('created_at', { ascending: false });
 
-        if (error) {
-          console.error("Error fetching gallery photos:", error);
-        } else if (data) {
-          setPhotos(data as Photo[]);
+        // Fetch all comments to ensure counts are always accurate even if db gets out of sync
+        const { data: commentsData } = await supabase
+          .from('gallery_comments')
+          .select('photo_id');
+
+        if (photosError) {
+          console.error("Error fetching gallery photos:", photosError);
+        } else if (photosData) {
+          // Calculate true comment counts
+          const commentCounts: Record<string, number> = {};
+          if (commentsData) {
+            commentsData.forEach(c => {
+              commentCounts[c.photo_id] = (commentCounts[c.photo_id] || 0) + 1;
+            });
+          }
+
+          // Merge true counts
+          const updatedPhotos = photosData.map(p => ({
+            ...p,
+            comment_count: Math.max(p.comment_count || 0, commentCounts[p.id] || 0)
+          }));
+
+          setPhotos(updatedPhotos as Photo[]);
         }
       } catch (err) {
         console.error("Failed to load photos", err);
