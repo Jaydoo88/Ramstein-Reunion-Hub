@@ -11,6 +11,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import heroBg from "@assets/attending-hero-bg.jpg";
 
 // Mock Data Structure
 interface Attendee {
@@ -84,20 +85,29 @@ export default function WhoIsAttending() {
   return (
     <div className="min-h-screen bg-muted pt-28 pb-24">
       {/* Header Area */}
-      <div className="bg-rhs-navy text-white py-12 px-4 shadow-md relative overflow-hidden">
-        {/* Subtle background pattern/overlay could go here */}
-        <div className="absolute inset-0 bg-[#001533] opacity-50 z-0"></div>
+      <div className="bg-rhs-navy text-white py-16 px-4 shadow-md relative overflow-hidden">
+        {/* Background Image with blur and overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={heroBg} 
+            alt="Alumni reconnecting" 
+            className="w-full h-full object-cover object-center opacity-60 blur-[4px] scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-rhs-navy/80 via-rhs-navy/80 to-rhs-navy/95"></div>
+          <div className="absolute inset-0 bg-[#001533] opacity-40"></div>
+        </div>
+        
         <div className="container mx-auto max-w-6xl relative z-10">
           <Link href="/#memories">
-            <Button variant="ghost" className="text-white hover:text-gray-200 hover:bg-white/10 mb-6 -ml-4">
+            <Button variant="ghost" className="text-white hover:text-gray-200 hover:bg-white/10 mb-6 -ml-4 backdrop-blur-sm">
               <ChevronLeft className="w-5 h-5 mr-1" />
               Back to Home
             </Button>
           </Link>
-          <h1 className="font-display text-4xl md:text-6xl mb-4 tracking-wider uppercase drop-shadow-md">
+          <h1 className="font-display text-4xl md:text-6xl mb-4 tracking-wider uppercase drop-shadow-md text-white">
             Who Is Attending
           </h1>
-          <p className="font-sans text-xl md:text-2xl text-blue-100 max-w-3xl leading-relaxed">
+          <p className="font-sans text-xl md:text-2xl text-blue-100 max-w-3xl leading-relaxed drop-shadow-sm font-medium">
             See which Ramstein alumni are planning to attend the reunion weekend. 
             Browse by name and class year and reconnect before the event.
           </p>
