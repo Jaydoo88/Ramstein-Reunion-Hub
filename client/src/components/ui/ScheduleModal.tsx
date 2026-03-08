@@ -17,7 +17,14 @@ export function ScheduleModal({ children }: { children: React.ReactNode }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white border-2 border-rhs-gold">
+      <DialogContent 
+        className="sm:max-w-[425px] bg-white border-2 border-rhs-gold"
+        onCloseAutoFocus={(e) => {
+          if (window.location.hash === '#schedule') {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="font-display text-3xl text-rhs-navy tracking-wide uppercase">
             Reunion Weekend Schedule
@@ -42,11 +49,25 @@ export function ScheduleModal({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="pt-2">
-          <a href="/#schedule" onClick={() => setOpen(false)} className="block w-full">
-            <Button className="w-full bg-rhs-navy hover:bg-rhs-navy/90 text-white font-bold uppercase tracking-wider rounded-none py-6">
-              View Full Schedule
-            </Button>
-          </a>
+          <Button 
+            className="w-full bg-rhs-navy hover:bg-rhs-navy/90 text-white font-bold uppercase tracking-wider rounded-none py-6"
+            onClick={(e) => {
+              e.preventDefault();
+              setOpen(false);
+              // Delay the scroll to ensure the modal closes and releases focus first
+              setTimeout(() => {
+                window.location.hash = 'schedule';
+                const el = document.getElementById('schedule');
+                if (el) {
+                  const yOffset = -80; // offset for fixed header if any
+                  const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                  window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+              }, 150);
+            }}
+          >
+            View Full Schedule
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
