@@ -2,11 +2,13 @@ import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import jaySchuhPhoto from "@assets/jayschuh_1772250109274.jpg";
 import jasonPhoto from "@assets/1665088037422_1772290199657.jpg";
+import julasPhoto from "@assets/julas.jpg";
 
 export function Committee() {
   const getPhoto = (photoName: string | undefined) => {
     if (photoName === "jay") return jaySchuhPhoto;
     if (photoName === "jason") return jasonPhoto;
+    if (photoName === "julas") return julasPhoto;
     return null;
   };
 
