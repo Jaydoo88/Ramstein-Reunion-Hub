@@ -42,11 +42,11 @@ export function ScheduleModal({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="pt-2">
-          <Link href="/#schedule" onClick={() => setOpen(false)}>
+          <a href="/#schedule" onClick={() => setOpen(false)} className="block w-full">
             <Button className="w-full bg-rhs-navy hover:bg-rhs-navy/90 text-white font-bold uppercase tracking-wider rounded-none py-6">
               View Full Schedule
             </Button>
-          </Link>
+          </a>
         </div>
       </DialogContent>
     </Dialog>
