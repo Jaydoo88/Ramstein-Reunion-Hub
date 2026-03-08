@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import { Button } from "@/components/ui/button";
 import { MailingListModal } from "@/components/ui/MailingListModal";
+import { ScheduleModal } from "@/components/ui/ScheduleModal";
 import heroBg from "@assets/image_1771987222394.png";
 
 export function Hero() {
@@ -71,9 +72,11 @@ export function Hero() {
                   {siteContent.hero.ctaPrimary}
                 </Button>
               </MailingListModal>
-              <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold uppercase tracking-wider text-lg px-8 py-6 rounded-none transition-transform hover:-translate-y-1">
-                {siteContent.hero.ctaSecondary}
-              </Button>
+              <ScheduleModal>
+                <Button size="lg" variant="outline" className="w-full sm:w-auto bg-transparent hover:bg-white/10 text-white border-2 border-white font-bold uppercase tracking-wider text-lg px-8 py-6 rounded-none transition-transform hover:-translate-y-1">
+                  {siteContent.hero.ctaSecondary}
+                </Button>
+              </ScheduleModal>
             </div>
           </motion.div>
         </div>
