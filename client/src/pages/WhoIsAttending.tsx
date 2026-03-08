@@ -11,7 +11,6 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import heroBg from "@assets/attending-hero-bg.jpg";
 
 // Mock Data Structure
 interface Attendee {
@@ -89,12 +88,12 @@ export default function WhoIsAttending() {
         {/* Background Image with blur and overlay */}
         <div className="absolute inset-0 z-0">
           <img 
-            src={heroBg} 
+            src="/images/attending-hero-bg.jpg" 
             alt="Alumni reconnecting" 
-            className="w-full h-full object-cover object-center opacity-60 blur-[4px] scale-105"
+            className="w-full h-full object-cover object-center blur-[4px] scale-105 opacity-80"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-rhs-navy/80 via-rhs-navy/80 to-rhs-navy/95"></div>
-          <div className="absolute inset-0 bg-[#001533] opacity-40"></div>
+          <div className="absolute inset-0 bg-rhs-navy/60 mix-blend-multiply"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-rhs-navy/40 via-rhs-navy/60 to-rhs-navy/95"></div>
         </div>
         
         <div className="container mx-auto max-w-6xl relative z-10">
