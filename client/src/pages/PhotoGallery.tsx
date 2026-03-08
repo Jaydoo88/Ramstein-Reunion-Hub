@@ -367,16 +367,13 @@ export default function PhotoGallery() {
                 {/* Photo Content & Interactions */}
                 <div className="p-4 flex flex-col flex-grow">
                   {/* Title / Caption */}
-                  {(photo.title || photo.caption) && (
-                    <div className="mb-3">
-                      {photo.title && <h3 className="font-bold text-gray-900 mb-1">{photo.title}</h3>}
-                      {photo.caption && (
-                        <p className="text-gray-700 text-sm line-clamp-2">
-                          {photo.caption}
-                        </p>
-                      )}
-                    </div>
-                  )}
+                  <div className="mb-3 h-[48px] flex flex-col justify-start">
+                    {photo.title ? (
+                      <h3 className="font-bold text-gray-900 mb-1 line-clamp-2 leading-tight">{photo.title}</h3>
+                    ) : photo.caption ? (
+                      <p className="text-gray-700 text-sm line-clamp-2 leading-tight">{photo.caption}</p>
+                    ) : null}
+                  </div>
 
                   {/* Stats Row */}
                   <div className="flex justify-between items-center text-xs text-gray-500 mb-3 pb-3 border-b border-gray-100">
