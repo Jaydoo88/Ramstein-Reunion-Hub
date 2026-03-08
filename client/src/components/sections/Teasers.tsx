@@ -38,7 +38,7 @@ export function Teasers() {
             Reconnect & Reminisce
           </h2>
           <p className="font-sans text-lg text-gray-600">
-            Features coming soon to help us catch up before the big weekend.
+            Explore features designed to help us reconnect and catch up before the big weekend.
           </p>
         </div>
 
