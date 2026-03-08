@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import jaySchuhPhoto from "@assets/jayschuh_1772250109274.jpg";
 import jasonPhoto from "@assets/1665088037422_1772290199657.jpg";
-import julasPhoto from "@assets/julas.jpg";
+import julasPhoto from "@assets/julas_1772987027834.jpg";
 
 export function Committee() {
   const getPhoto = (photoName: string | undefined) => {
