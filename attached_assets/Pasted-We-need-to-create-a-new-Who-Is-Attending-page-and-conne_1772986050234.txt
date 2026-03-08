@@ -1,0 +1,154 @@
+We need to create a new Who Is Attending page and connect the current homepage card/button to it.
+
+1) Replace the current button text
+
+On the homepage card that currently says:
+
+VIEW ATTENDEE LIST (COMING SOON)
+
+Change it to:
+
+VIEW ATTENDEE LIST
+
+2) Link the button properly
+
+The button should no longer be static.
+
+Make it route to:
+
+/who-is-attending
+
+Do not use a broken anchor or placeholder.
+Make sure clicking it opens the page at the top.
+
+3) Build a new page: /who-is-attending
+
+Create a polished, visually strong page that matches the reunion site branding.
+
+Page purpose
+
+This page should show who is attending the reunion.
+
+For now, build the page structure and UI with mock/sample attendee data.
+Later we will connect it to Supabase and payments.
+
+4) What the page should include
+Hero / page intro
+
+Title:
+Who Is Attending
+
+Subtext:
+See which Ramstein alumni are planning to attend the reunion weekend. Browse by name and class year and reconnect before the event.
+
+Stats / summary strip
+
+At the top, include a clean summary area showing mock values for now, such as:
+
+Total Attendees
+
+Number of Class Years Represented
+
+Most Represented Class Year
+
+Search and filter area
+
+Add controls for:
+
+Search by name
+
+Filter by class year
+
+Sort by:
+
+Name A–Z
+
+Name Z–A
+
+Class Year Ascending
+
+Class Year Descending
+
+Attendee list/grid
+
+Display attendees in a clean card/grid or list layout.
+
+Each attendee card should show:
+
+Full name
+
+Class year
+
+Optional city/state if available later
+
+Optional badge/tag like:
+
+Confirmed
+
+Bringing Guest
+
+VIP / Committee
+For now these can be mock placeholders if needed.
+
+Empty state
+
+If no attendees match the search/filter, show a polished empty state instead of a broken blank area.
+
+Use text like:
+No attendees found matching your search.
+
+5) Design direction
+
+Make this page feel exciting and polished — not like a plain spreadsheet.
+
+It should feel like:
+
+a reunion preview
+
+warm / social / welcoming
+
+clean and modern
+
+easy to scan on mobile and desktop
+
+Use the same site styling and branding, but make it feel more premium and “alive.”
+
+6) Data structure planning for later
+
+Build this so it is easy to connect to Supabase later.
+
+We will eventually create a table for attendees that likely includes:
+
+id
+
+full_name
+
+class_year
+
+payment_status
+
+registration_status
+
+guest_count
+
+created_at
+
+Do not wire Supabase yet unless it is easy, but structure the components so it will be simple to connect later.
+
+7) Payment-ready planning
+
+Keep in mind that in the future, when someone pays/registers, their attendee record will populate this page automatically.
+
+So the page should be built in a reusable way that can later consume real attendee records.
+
+8) What I need back
+
+Please tell me:
+
+what files/components were created or changed
+
+whether the page is using mock data for now
+
+what component controls the attendee list/cards
+
+how the homepage button was linked

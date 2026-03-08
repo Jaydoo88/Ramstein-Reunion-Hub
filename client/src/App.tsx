@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import MemoryWall from "@/pages/MemoryWall";
 import PhotoGallery from "@/pages/PhotoGallery";
 import UploadPhotos from "@/pages/UploadPhotos";
+import WhoIsAttending from "@/pages/WhoIsAttending";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -21,6 +22,7 @@ function Router() {
           <Route path="/memory-wall" component={MemoryWall} />
           <Route path="/photo-gallery" component={PhotoGallery} />
           <Route path="/upload-photos" component={UploadPhotos} />
+          <Route path="/who-is-attending" component={WhoIsAttending} />
           {/* Fallback to 404 */}
           <Route component={NotFound} />
         </Switch>

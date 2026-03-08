@@ -81,7 +81,7 @@ export const siteContent = {
     whereAreTheyNow: {
       title: "Who Is Attending?",
       description: "See who has RSVP’d and who’s planning to join the big weekend. Don’t miss out on reconnecting with familiar faces.",
-      buttonText: "VIEW ATTENDEE LIST (COMING SOON)",
+      buttonText: "VIEW ATTENDEE LIST",
     },
   },
 
